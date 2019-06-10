@@ -1,3 +1,12 @@
+//
+// Changes:
+// * Make work for Eigen Vectors and Matrices
+// * Implement a better way for named_plot, maybe just as additional
+//   method with extra keyword
+// * add location keyword for legend
+// * add submodule for our own functions such as spy
+//
+
 #pragma once
 
 #include <algorithm>
@@ -57,6 +66,8 @@ struct _interpreter {
   PyObject *s_python_function_ylabel;
   PyObject *s_python_function_xticks;
   PyObject *s_python_function_yticks;
+  PyObject *s_python_function_xscale;
+  PyObject *s_python_function_yscale;
   PyObject *s_python_function_grid;
   PyObject *s_python_function_clf;
   PyObject *s_python_function_errorbar;
@@ -181,6 +192,8 @@ private:
     s_python_function_ylabel = PyObject_GetAttrString(pymod, "ylabel");
     s_python_function_xticks = PyObject_GetAttrString(pymod, "xticks");
     s_python_function_yticks = PyObject_GetAttrString(pymod, "yticks");
+    s_python_function_xscale = PyObject_GetAttrString(pymod, "xscale");
+    s_python_function_yscale = PyObject_GetAttrString(pymod, "yscale");
     s_python_function_grid = PyObject_GetAttrString(pymod, "grid");
     s_python_function_xlim = PyObject_GetAttrString(pymod, "xlim");
     s_python_function_ion = PyObject_GetAttrString(pymod, "ion");
@@ -209,6 +222,8 @@ private:
         !s_python_function_legend || !s_python_function_ylim ||
         !s_python_function_title || !s_python_function_axis ||
         !s_python_function_xlabel || !s_python_function_ylabel ||
+        !s_python_function_xticks || !s_python_function_yticks ||
+        !s_python_function_xscale || !s_python_function_yscale ||
         !s_python_function_grid || !s_python_function_xlim ||
         !s_python_function_ion || !s_python_function_ginput ||
         !s_python_function_save || !s_python_function_clf ||
@@ -241,6 +256,10 @@ private:
         !PyFunction_Check(s_python_function_axis) ||
         !PyFunction_Check(s_python_function_xlabel) ||
         !PyFunction_Check(s_python_function_ylabel) ||
+        !PyFunction_Check(s_python_function_xticks) ||
+        !PyFunction_Check(s_python_function_yticks) ||
+        !PyFunction_Check(s_python_function_xscale) ||
+        !PyFunction_Check(s_python_function_yscale) ||
         !PyFunction_Check(s_python_function_grid) ||
         !PyFunction_Check(s_python_function_xlim) ||
         !PyFunction_Check(s_python_function_ion) ||
@@ -334,6 +353,8 @@ template <> struct select_npy_type<uint64_t> {
   const static NPY_TYPES type = NPY_UINT64;
 };
 
+// TODO change to Vector template so useable for Eigen vectors,
+// should be enough since it also provides the end and begin methods
 template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
                                // numpy commands to work
@@ -353,6 +374,29 @@ template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
   return varray;
 }
 
+template <typename Vector> PyObject *get_array(const Vector &v) {
+  detail::_interpreter::get(); // interpreter needs to be initialized for the
+                               // numpy commands to work
+  // both Eigen::Matrix<..> and std::vector<..> have the member value_type
+  NPY_TYPES type = select_npy_type<typename Vector::value_type>::type;
+  if (type == NPY_NOTYPE) {
+    std::vector<double> vd(v.size());
+    npy_intp vsize = v.size();
+    std::copy(v.begin(), v.end(), vd.begin());
+    PyObject *varray =
+        PyArray_SimpleNewFromData(1, &vsize, NPY_DOUBLE, (void *)(vd.data()));
+    return varray;
+  }
+
+  npy_intp vsize = v.size();
+  PyObject *varray =
+      PyArray_SimpleNewFromData(1, &vsize, type, (void *)(v.data()));
+  return varray;
+}
+
+// TODO maybe we have to add a function for Eigen matrices, not sure
+// if the v[0] is valid for matrices and also the ::std::vector &v_row
+// probably doesn't work
 template <typename Numeric>
 PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
@@ -380,9 +424,16 @@ PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
 
 #else // fallback if we don't have numpy: copy every element of the given vector
 
+// TODO to Vector templat
 template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
-  detail::_interpreter::get();
+  PyObject *list = PyList_New(v.size());
+  for (size_t i = 0; i < v.size(); ++i) {
+    PyList_SetItem(list, i, PyFloat_FromDouble(v.at(i)));
+  }
+  return list;
+}
 
+template <typename Vector> PyObject *get_array(const Vector &v) {
   PyObject *list = PyList_New(v.size());
   for (size_t i = 0; i < v.size(); ++i) {
     PyList_SetItem(list, i, PyFloat_FromDouble(v.at(i)));
@@ -392,8 +443,8 @@ template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
 
 #endif // WITHOUT_NUMPY
 
-template <typename Numeric>
-bool plot(const std::vector<Numeric> &x, const std::vector<Numeric> &y,
+template <typename VectorX, typename VectorY>
+bool plot(const VectorX &x, const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
   assert(x.size() == y.size());
 
@@ -767,9 +818,8 @@ bool named_hist(std::string label, const std::vector<Numeric> &y,
   return res;
 }
 
-template <typename NumericX, typename NumericY>
-bool plot(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-          const std::string &s = "") {
+template <typename VectorX, typename VectorY>
+bool plot(const VectorX &x, const VectorY &y, const std::string &s = "") {
   assert(x.size() == y.size());
 
   PyObject *xarray = get_array(x);
@@ -904,29 +954,54 @@ bool semilogy(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
   return res;
 }
 
-template <typename NumericX, typename NumericY>
-bool loglog(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-            const std::string &s = "") {
-  assert(x.size() == y.size());
+template <typename... Args> bool loglog_call(Args... args) {
+  // argument for xscale/yscale is only the string "log"
+  PyObject *log_arg = PyTuple_New(1);
+  PyObject *pystring = PyString_FromString("log");
+  PyTuple_SetItem(log_arg, 0, pystring);
 
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
+  // call xscale("log") and yscale("log"), no kwargs needed hence pass NULL,
+  // as explained in https://docs.python.org/3/c-api/object.html
+  PyObject *res_x = PyObject_Call(
+      detail::_interpreter::get().s_python_function_xscale, log_arg, NULL);
+  PyObject *res_y = PyObject_Call(
+      detail::_interpreter::get().s_python_function_yscale, log_arg, NULL);
 
-  PyObject *pystring = PyString_FromString(s.c_str());
+  // clean up
+  Py_DECREF(log_arg);
 
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
+  if (!res_x)
+    throw std::runtime_error("Call to xscale() failed");
+  Py_DECREF(res_x);
 
-  PyObject *res = PyObject_CallObject(
-      detail::_interpreter::get().s_python_function_loglog, plot_args);
+  if (!res_y)
+    throw std::runtime_error("Call to yscale() failed");
+  Py_DECREF(res_y);
 
-  Py_DECREF(plot_args);
-  if (res)
-    Py_DECREF(res);
+  // call plot, which gets now plotted in doubly logarithmic scale
+  return plot(args...);
+}
 
-  return res;
+template <typename VectorY>
+bool loglog(const VectorY &y, const std::string &s = "") {
+  return loglog_call(y, s);
+}
+
+template <typename VectorX, typename VectorY>
+bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "") {
+  return loglog_call(x, y, s);
+}
+
+template <typename VectorY>
+bool loglog(const VectorY &y,
+            const std::map<std::string, std::string> &kwargs) {
+  return loglog_call(y, kwargs);
+}
+
+template <typename VectorX, typename VectorY>
+bool loglog(const VectorX &x, const VectorY &y,
+            const std::map<std::string, std::string> &kwargs) {
+  return loglog_call(x, y, kwargs);
 }
 
 template <typename NumericX, typename NumericY>
@@ -1107,9 +1182,12 @@ bool named_loglog(const std::string &name, const std::vector<Numeric> &x,
   return res;
 }
 
-template <typename Numeric>
-bool plot(const std::vector<Numeric> &y, const std::string &format = "") {
-  std::vector<Numeric> x(y.size());
+template <typename Vector>
+bool plot(const Vector &y, const std::string &format = "") {
+  // TODO can this be <size_t> or do we need <typename Vector::value_type>?
+  // before the conversion of this function from vector<Numeric> to Vector
+  // the created vector x was of the same type as y
+  std::vector<size_t> x(y.size());
   for (size_t i = 0; i < x.size(); ++i)
     x.at(i) = i;
   return plot(x, y, format);
@@ -1125,8 +1203,6 @@ bool stem(const std::vector<Numeric> &y, const std::string &format = "") {
 
 template <typename Numeric>
 void text(Numeric x, Numeric y, const std::string &s = "") {
-  detail::_interpreter::get();
-
   PyObject *args = PyTuple_New(3);
   PyTuple_SetItem(args, 0, PyFloat_FromDouble(x));
   PyTuple_SetItem(args, 1, PyFloat_FromDouble(y));
@@ -1399,9 +1475,6 @@ inline void yticks(const std::vector<Numeric> &ticks,
 }
 
 inline void subplot(long nrows, long ncols, long plot_number) {
-
-  detail::_interpreter::get();
-
   // construct positional args
   PyObject *args = PyTuple_New(3);
   PyTuple_SetItem(args, 0, PyFloat_FromDouble(nrows));
@@ -1441,7 +1514,6 @@ inline void title(const std::string &titlestr,
 
 inline void suptitle(const std::string &suptitlestr,
                      const std::map<std::string, std::string> &keywords = {}) {
-  detail::_interpreter::get();
   PyObject *pysuptitlestr = PyString_FromString(suptitlestr.c_str());
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pysuptitlestr);
@@ -1741,8 +1813,6 @@ template <> struct plot_impl<std::false_type> {
   template <typename IterableX, typename IterableY>
   bool operator()(const IterableX &x, const IterableY &y,
                   const std::string &format) {
-    detail::_interpreter::get();
-
     // 2-phase lookup for distance, begin, end
     using std::begin;
     using std::distance;
@@ -1812,16 +1882,16 @@ bool plot(const A &a, const B &b, const std::string &format, Args... args) {
  */
 inline bool plot(const std::vector<double> &x, const std::vector<double> &y,
                  const std::string &format = "") {
-  return plot<double, double>(x, y, format);
+  return plot<std::vector<double>, std::vector<double>>(x, y, format);
 }
 
 inline bool plot(const std::vector<double> &y, const std::string &format = "") {
-  return plot<double>(y, format);
+  return plot<std::vector<double>>(y, format);
 }
 
 inline bool plot(const std::vector<double> &x, const std::vector<double> &y,
                  const std::map<std::string, std::string> &keywords) {
-  return plot<double>(x, y, keywords);
+  return plot<std::vector<double>, std::vector<double>>(x, y, keywords);
 }
 
 /*
