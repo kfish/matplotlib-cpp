@@ -381,6 +381,7 @@ PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
 #else // fallback if we don't have numpy: copy every element of the given vector
 
 template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
+  // interpreter needs to be initialized for any following commands to work
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(v.size());
