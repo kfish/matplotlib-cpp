@@ -1763,117 +1763,12 @@ inline void tight_layout() {
   Py_DECREF(res);
 }
 
-// Support for variadic plot() and initializer lists:
-
-namespace detail {
-
-template <typename T>
-using is_function = typename std::is_function<
-    std::remove_pointer<std::remove_reference<T>>>::type;
-
-template <bool obj, typename T> struct is_callable_impl;
-
-template <typename T> struct is_callable_impl<false, T> {
-  typedef is_function<T> type;
-}; // a non-object is callable iff it is a function
-
-template <typename T> struct is_callable_impl<true, T> {
-  struct Fallback {
-    void operator()();
-  };
-  struct Derived : T, Fallback {};
-
-  template <typename U, U> struct Check;
-
-  template <typename U>
-  static std::true_type
-  test(...); // use a variadic function to make sure (1) it accepts everything
-             // and (2) its always the worst match
-
-  template <typename U>
-  static std::false_type test(Check<void (Fallback::*)(), &U::operator()> *);
-
-public:
-  typedef decltype(test<Derived>(nullptr)) type;
-  typedef decltype(&Fallback::operator()) dtype;
-  static constexpr bool value = type::value;
-}; // an object is callable iff it defines operator()
-
-template <typename T> struct is_callable {
-  // dispatch to is_callable_impl<true, T> or is_callable_impl<false, T>
-  // depending on whether T is of class type or not
-  typedef typename is_callable_impl<std::is_class<T>::value, T>::type type;
-};
-
-template <typename IsYDataCallable> struct plot_impl {};
-
-template <> struct plot_impl<std::false_type> {
-  template <typename IterableX, typename IterableY>
-  bool operator()(const IterableX &x, const IterableY &y,
-                  const std::string &format) {
-    detail::_interpreter::get();
-
-    // 2-phase lookup for distance, begin, end
-    using std::begin;
-    using std::distance;
-    using std::end;
-
-    auto xs = distance(begin(x), end(x));
-    auto ys = distance(begin(y), end(y));
-    assert(xs == ys && "x and y data must have the same number of elements!");
-
-    PyObject *xlist = PyList_New(xs);
-    PyObject *ylist = PyList_New(ys);
-    PyObject *pystring = PyString_FromString(format.c_str());
-
-    auto itx = begin(x), ity = begin(y);
-    for (size_t i = 0; i < xs; ++i) {
-      PyList_SetItem(xlist, i, PyFloat_FromDouble(*itx++));
-      PyList_SetItem(ylist, i, PyFloat_FromDouble(*ity++));
-    }
-
-    PyObject *plot_args = PyTuple_New(3);
-    PyTuple_SetItem(plot_args, 0, xlist);
-    PyTuple_SetItem(plot_args, 1, ylist);
-    PyTuple_SetItem(plot_args, 2, pystring);
-
-    PyObject *res = PyObject_CallObject(
-        detail::_interpreter::get().s_python_function_plot, plot_args);
-
-    Py_DECREF(plot_args);
-    if (res)
-      Py_DECREF(res);
-
-    return res;
-  }
-};
-
-template <> struct plot_impl<std::true_type> {
-  template <typename Iterable, typename Callable>
-  bool operator()(const Iterable &ticks, const Callable &f,
-                  const std::string &format) {
-    if (begin(ticks) == end(ticks))
-      return true;
-
-    // We could use additional meta-programming to deduce the correct element
-    // type of y, but all values have to be convertible to double anyways
-    std::vector<double> y;
-    for (auto x : ticks)
-      y.push_back(f(x));
-    return plot_impl<std::false_type>()(ticks, y, format);
-  }
-};
-
-} // end namespace detail
-
-// recursion stop for the above
+// recursion stop for the below
 template <typename... Args> bool plot() { return true; }
 
 template <typename A, typename B, typename... Args>
 bool plot(const A &a, const B &b, const std::string &format, Args... args) {
-  return detail::plot_impl<typename detail::is_callable<B>::type>()(a, b,
-                                                                    format) &&
-         plot(args...);
+  return plot(a, b, format) && plot(args...);
 }
 
 /*
