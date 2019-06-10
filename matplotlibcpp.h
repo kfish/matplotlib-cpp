@@ -498,6 +498,64 @@ bool plot(const VectorY &y,
   return plot(x, y, "", keywords);
 }
 
+template <typename VectorX, typename VectorY>
+bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "",
+            const std::map<std::string, std::string> &keywords = {}) {
+  detail::_interpreter::get();
+
+  // argument for xscale/yscale is only the string "log"
+  PyObject *log_arg = PyTuple_New(1);
+  PyObject *pystring = PyString_FromString("log");
+  PyTuple_SetItem(log_arg, 0, pystring);
+
+  // call xscale("log") and yscale("log"), no kwargs needed hence pass NULL,
+  // as explained in https://docs.python.org/3/c-api/object.html
+  PyObject *res_x = PyObject_Call(
+      detail::_interpreter::get().s_python_function_xscale, log_arg, NULL);
+  PyObject *res_y = PyObject_Call(
+      detail::_interpreter::get().s_python_function_yscale, log_arg, NULL);
+
+  // clean up
+  Py_DECREF(log_arg);
+
+  if (!res_x)
+    throw std::runtime_error("Call to xscale() failed");
+  Py_DECREF(res_x);
+
+  if (!res_y)
+    throw std::runtime_error("Call to yscale() failed");
+  Py_DECREF(res_y);
+
+  // call plot, which gets now plotted in doubly logarithmic scale
+  return plot(x, y, s, keywords);
+}
+
+template <typename VectorX, typename VectorY>
+bool loglog(const VectorX &x, const VectorY &y,
+            const std::map<std::string, std::string> &keywords) {
+  return loglog(x, y, "", keywords);
+}
+
+template <typename VectorY>
+bool loglog(const VectorY &y, const std::string &s = "",
+            const std::map<std::string, std::string> &keywords = {}) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in loglog scale the values shouldn't be zero
+
+  return loglog(x, y, s, keywords);
+}
+
+template <typename VectorY>
+bool loglog(const VectorY &y,
+            const std::map<std::string, std::string> &keywords) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in loglog scale the values shouldn't be zero
+
+  return loglog(x, y, "", keywords);
+}
+
 template <typename Numeric>
 void plot_surface(const std::vector<::std::vector<Numeric>> &x,
                   const std::vector<::std::vector<Numeric>> &y,
@@ -950,56 +1008,6 @@ bool semilogy(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
     Py_DECREF(res);
 
   return res;
-}
-
-template <typename... Args> bool loglog_call(Args... args) {
-  // argument for xscale/yscale is only the string "log"
-  PyObject *log_arg = PyTuple_New(1);
-  PyObject *pystring = PyString_FromString("log");
-  PyTuple_SetItem(log_arg, 0, pystring);
-
-  // call xscale("log") and yscale("log"), no kwargs needed hence pass NULL,
-  // as explained in https://docs.python.org/3/c-api/object.html
-  PyObject *res_x = PyObject_Call(
-      detail::_interpreter::get().s_python_function_xscale, log_arg, NULL);
-  PyObject *res_y = PyObject_Call(
-      detail::_interpreter::get().s_python_function_yscale, log_arg, NULL);
-
-  // clean up
-  Py_DECREF(log_arg);
-
-  if (!res_x)
-    throw std::runtime_error("Call to xscale() failed");
-  Py_DECREF(res_x);
-
-  if (!res_y)
-    throw std::runtime_error("Call to yscale() failed");
-  Py_DECREF(res_y);
-
-  // call plot, which gets now plotted in doubly logarithmic scale
-  return plot(args...);
-}
-
-template <typename VectorY>
-bool loglog(const VectorY &y, const std::string &s = "") {
-  return loglog_call(y, s);
-}
-
-template <typename VectorX, typename VectorY>
-bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "") {
-  return loglog_call(x, y, s);
-}
-
-template <typename VectorY>
-bool loglog(const VectorY &y,
-            const std::map<std::string, std::string> &kwargs) {
-  return loglog_call(y, kwargs);
-}
-
-template <typename VectorX, typename VectorY>
-bool loglog(const VectorX &x, const VectorY &y,
-            const std::map<std::string, std::string> &kwargs) {
-  return loglog_call(x, y, kwargs);
 }
 
 template <typename NumericX, typename NumericY>
