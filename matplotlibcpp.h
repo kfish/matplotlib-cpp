@@ -549,6 +549,74 @@ bool loglog(const VectorY &y,
   return loglog(x, y, "", keywords);
 }
 
+template <typename VectorX, typename VectorY>
+bool semilogx(const VectorX &x, const VectorY &y, const std::string &s = "",
+              const std::map<std::string, std::string> &keywords = {}) {
+  return detail::plot_base(
+      detail::_interpreter::get().s_python_function_semilogx, x, y, s,
+      keywords);
+}
+
+template <typename VectorX, typename VectorY>
+bool semilogx(const VectorX &x, const VectorY &y,
+              const std::map<std::string, std::string> &keywords) {
+  return semilogx(x, y, "", keywords);
+}
+
+template <typename VectorY>
+bool semilogx(const VectorY &y, const std::string &s = "",
+              const std::map<std::string, std::string> &keywords = {}) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+
+  return semilogx(x, y, s, keywords);
+}
+
+template <typename VectorY>
+bool semilogx(const VectorY &y,
+              const std::map<std::string, std::string> &keywords) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+
+  return semilogx(x, y, "", keywords);
+}
+
+template <typename VectorX, typename VectorY>
+bool semilogy(const VectorX &x, const VectorY &y, const std::string &s = "",
+              const std::map<std::string, std::string> &keywords = {}) {
+  return detail::plot_base(
+      detail::_interpreter::get().s_python_function_semilogy, x, y, s,
+      keywords);
+}
+
+template <typename VectorX, typename VectorY>
+bool semilogy(const VectorX &x, const VectorY &y,
+              const std::map<std::string, std::string> &keywords) {
+  return semilogy(x, y, "", keywords);
+}
+
+template <typename VectorY>
+bool semilogy(const VectorY &y, const std::string &s = "",
+              const std::map<std::string, std::string> &keywords = {}) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+
+  return semilogy(x, y, s, keywords);
+}
+
+template <typename VectorY>
+bool semilogy(const VectorY &y,
+              const std::map<std::string, std::string> &keywords) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+
+  return semilogy(x, y, "", keywords);
+}
+
 template <typename Numeric>
 void plot_surface(const std::vector<::std::vector<Numeric>> &x,
                   const std::vector<::std::vector<Numeric>> &y,
@@ -945,56 +1013,6 @@ bool stem(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
 
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_stem, plot_args);
-
-  Py_DECREF(plot_args);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
-}
-
-template <typename NumericX, typename NumericY>
-bool semilogx(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-              const std::string &s = "") {
-  assert(x.size() == y.size());
-
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(s.c_str());
-
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
-
-  PyObject *res = PyObject_CallObject(
-      detail::_interpreter::get().s_python_function_semilogx, plot_args);
-
-  Py_DECREF(plot_args);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
-}
-
-template <typename NumericX, typename NumericY>
-bool semilogy(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-              const std::string &s = "") {
-  assert(x.size() == y.size());
-
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(s.c_str());
-
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
-
-  PyObject *res = PyObject_CallObject(
-      detail::_interpreter::get().s_python_function_semilogy, plot_args);
 
   Py_DECREF(plot_args);
   if (res)
