@@ -501,33 +501,33 @@ bool plot(const VectorY &y,
 template <typename VectorX, typename VectorY>
 bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "",
             const std::map<std::string, std::string> &keywords = {}) {
-  detail::_interpreter::get();
+  assert(x.size() == y.size());
 
-  // argument for xscale/yscale is only the string "log"
-  PyObject *log_arg = PyTuple_New(1);
-  PyObject *pystring = PyString_FromString("log");
-  PyTuple_SetItem(log_arg, 0, pystring);
+  PyObject *xarray = get_array(x);
+  PyObject *yarray = get_array(y);
 
-  // call xscale("log") and yscale("log"), no kwargs needed hence pass NULL,
-  // as explained in https://docs.python.org/3/c-api/object.html
-  PyObject *res_x = PyObject_Call(
-      detail::_interpreter::get().s_python_function_xscale, log_arg, NULL);
-  PyObject *res_y = PyObject_Call(
-      detail::_interpreter::get().s_python_function_yscale, log_arg, NULL);
+  PyObject *pystring = PyString_FromString(s.c_str());
 
-  // clean up
-  Py_DECREF(log_arg);
+  PyObject *plot_args = PyTuple_New(3);
+  PyTuple_SetItem(plot_args, 0, xarray);
+  PyTuple_SetItem(plot_args, 1, yarray);
+  PyTuple_SetItem(plot_args, 2, pystring);
 
-  if (!res_x)
-    throw std::runtime_error("Call to xscale() failed");
-  Py_DECREF(res_x);
+  PyObject *kwargs = PyDict_New();
+  for (auto const &item : keywords) {
+    PyDict_SetItemString(kwargs, item.first.c_str(),
+                         PyString_FromString(item.second.c_str()));
+  }
 
-  if (!res_y)
-    throw std::runtime_error("Call to yscale() failed");
-  Py_DECREF(res_y);
+  PyObject *res = PyObject_Call(
+      detail::_interpreter::get().s_python_function_loglog, plot_args, kwargs);
 
-  // call plot, which gets now plotted in doubly logarithmic scale
-  return plot(x, y, s, keywords);
+  Py_DECREF(plot_args);
+  Py_DECREF(kwargs);
+  if (res)
+    Py_DECREF(res);
+
+  return res;
 }
 
 template <typename VectorX, typename VectorY>
