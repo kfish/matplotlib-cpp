@@ -424,16 +424,8 @@ PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
 
 #else // fallback if we don't have numpy: copy every element of the given vector
 
-// TODO to Vector templat
-template <typename Numeric> PyObject *get_array(const std::vector<Numeric> &v) {
-  PyObject *list = PyList_New(v.size());
-  for (size_t i = 0; i < v.size(); ++i) {
-    PyList_SetItem(list, i, PyFloat_FromDouble(v.at(i)));
-  }
-  return list;
-}
-
 template <typename Vector> PyObject *get_array(const Vector &v) {
+  detail::_interpreter::get();
   PyObject *list = PyList_New(v.size());
   for (size_t i = 0; i < v.size(); ++i) {
     PyList_SetItem(list, i, PyFloat_FromDouble(v.at(i)));
@@ -1203,6 +1195,8 @@ bool stem(const std::vector<Numeric> &y, const std::string &format = "") {
 
 template <typename Numeric>
 void text(Numeric x, Numeric y, const std::string &s = "") {
+  detail::_interpreter::get();
+
   PyObject *args = PyTuple_New(3);
   PyTuple_SetItem(args, 0, PyFloat_FromDouble(x));
   PyTuple_SetItem(args, 1, PyFloat_FromDouble(y));
@@ -1475,6 +1469,8 @@ inline void yticks(const std::vector<Numeric> &ticks,
 }
 
 inline void subplot(long nrows, long ncols, long plot_number) {
+  detail::_interpreter::get();
+
   // construct positional args
   PyObject *args = PyTuple_New(3);
   PyTuple_SetItem(args, 0, PyFloat_FromDouble(nrows));
@@ -1514,6 +1510,8 @@ inline void title(const std::string &titlestr,
 
 inline void suptitle(const std::string &suptitlestr,
                      const std::map<std::string, std::string> &keywords = {}) {
+  detail::_interpreter::get();
+
   PyObject *pysuptitlestr = PyString_FromString(suptitlestr.c_str());
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pysuptitlestr);
@@ -1813,6 +1811,8 @@ template <> struct plot_impl<std::false_type> {
   template <typename IterableX, typename IterableY>
   bool operator()(const IterableX &x, const IterableY &y,
                   const std::string &format) {
+    detail::_interpreter::get();
+
     // 2-phase lookup for distance, begin, end
     using std::begin;
     using std::distance;
