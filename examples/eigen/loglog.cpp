@@ -18,13 +18,13 @@ int main() {
   }
 
   // Plot line from given x and y data. Color is selected automatically.
-  plt::plot(x, w);
+  plt::loglog(x, w);
 
   // Plot a red dashed line from given x and y data.
-  plt::plot(x, y, "r--");
+  plt::loglog(x, y, "r--");
 
   // Plot a line whose name will show up as "log(x)" in the legend.
-  plt::plot(x, z, "g:", {{"label", "$x^3$"}});
+  plt::loglog(x, z, "g:", {{"label", "$x^3$"}});
 
   // Add graph title
   plt::title("Sample figure");
