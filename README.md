@@ -48,7 +48,7 @@ int main()
     // Plot a red dashed line from given x and y data.
     plt::plot(x, w,"r--");
     // Plot a line whose name will show up as "log(x)" in the legend.
-    plt::named_plot("log(x)", x, z);
+    plt::plot(x, z, {{"label", "log(x)"}});
     // Set x-axis to interval [0,1000000]
     plt::xlim(0, 1000*1000);
     // Add graph title
@@ -65,7 +65,7 @@ int main()
 
 ![Basic example](./examples/basic.png)
 
-Alternatively, matplotlib-cpp also supports some C++11-powered syntactic sugar:
+Also, matplotlib-cpp also supports being given multiple plot commands. However these have to come in triplets of `(x, y, fmt)` where `fmt` is a formatting string, such as `r--`.
 ```cpp
 #include <cmath>
 #include "matplotlibcpp.h"
@@ -77,18 +77,18 @@ int main()
 {    
     // Prepare data.
     int n = 5000; // number of data points
-    vector<double> x(n),y(n); 
+    vector<double> x(n), y(n), z(n); 
     for(int i=0; i<n; ++i) {
         double t = 2*M_PI*i/n;
         x.at(i) = 16*sin(t)*sin(t)*sin(t);
         y.at(i) = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t);
+        z.at(i) = 12.5 + abs(sin(x.at(i)));
     }
 
     // plot() takes an arbitrary number of (x,y,format)-triples. 
     // x must be iterable (that is, anything providing begin(x) and end(x)),
     // y must either be callable (providing operator() const) or iterable. 
-    plt::plot(x, y, "r-", x, [](double d) { return 12.5+abs(sin(d)); }, "k-");
-
+    plt::plot(x, y, "r-", x, z, "k-");
 
     // show plots
     plt::show();
@@ -188,6 +188,17 @@ int main()
 **Result:**
 
 ![surface example](./examples/surface.png)
+
+Eigen support and generic vectors
+-------------
+
+This fork of the library supports working not only with `std::vector`s, but with all classes providing the same 
+member functions as `std::vector`. In particular it is suited to be used with the C++ template library Eigen.
+
+The generalisation is currently a working process. Following functions already support generic vectors:
+* `plot`
+* `loglog`
+* `semilogx` and `semilogy`
 
 Installation
 ------------
