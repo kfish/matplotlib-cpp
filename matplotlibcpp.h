@@ -534,7 +534,7 @@ bool loglog(const VectorY &y, const std::string &s = "",
             const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in loglog scale the values shouldn't be zero
+    x.at(i) = i;
 
   return loglog(x, y, s, keywords);
 }
@@ -544,7 +544,7 @@ bool loglog(const VectorY &y,
             const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in loglog scale the values shouldn't be zero
+    x.at(i) = i;
 
   return loglog(x, y, "", keywords);
 }
@@ -568,7 +568,7 @@ bool semilogx(const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+    x.at(i) = i;
 
   return semilogx(x, y, s, keywords);
 }
@@ -578,7 +578,7 @@ bool semilogx(const VectorY &y,
               const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+    x.at(i) = i;
 
   return semilogx(x, y, "", keywords);
 }
@@ -602,7 +602,7 @@ bool semilogy(const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+    x.at(i) = i;
 
   return semilogy(x, y, s, keywords);
 }
@@ -612,7 +612,7 @@ bool semilogy(const VectorY &y,
               const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
   for (std::size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i + 1; // in semilogx scale the values shouldn't be zero
+    x.at(i) = i;
 
   return semilogy(x, y, "", keywords);
 }
