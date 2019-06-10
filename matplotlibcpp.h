@@ -437,9 +437,19 @@ template <typename Vector> PyObject *get_array(const Vector &v) {
 
 #endif // WITHOUT_NUMPY
 
+namespace detail {
+// @brief Since most of the plot commands require the exact same usage apart
+//        from the call to the correct Python function, we encapsulate this
+// @param pyfunc The matplotlib function to be called with the given arguments
+// @param x The x vector, must support std::vector methods
+// @param y The y vector, must support std::vector methods
+// @param s The formatting string for colour, marker and linestyle
+// @param keywords Additional keywords, such as label
+// @return true if plot was successful, false otherwise
 template <typename VectorX, typename VectorY>
-bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
-          const std::map<std::string, std::string> &keywords = {}) {
+bool plot_base(PyObject *const pyfunc, const VectorX &x, const VectorY &y,
+               const std::string &s = "",
+               const std::map<std::string, std::string> &keywords = {}) {
   assert(x.size() == y.size());
 
   PyObject *xarray = get_array(x);
@@ -458,8 +468,7 @@ bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
                          PyString_FromString(item.second.c_str()));
   }
 
-  PyObject *res = PyObject_Call(
-      detail::_interpreter::get().s_python_function_plot, plot_args, kwargs);
+  PyObject *res = PyObject_Call(pyfunc, plot_args, kwargs);
 
   Py_DECREF(plot_args);
   Py_DECREF(kwargs);
@@ -467,6 +476,15 @@ bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
     Py_DECREF(res);
 
   return res;
+}
+
+} // namespace detail
+
+template <typename VectorX, typename VectorY>
+bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
+          const std::map<std::string, std::string> &keywords = {}) {
+  return detail::plot_base(detail::_interpreter::get().s_python_function_plot,
+                           x, y, s, keywords);
 }
 
 template <typename VectorX, typename VectorY>
@@ -501,33 +519,8 @@ bool plot(const VectorY &y,
 template <typename VectorX, typename VectorY>
 bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "",
             const std::map<std::string, std::string> &keywords = {}) {
-  assert(x.size() == y.size());
-
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(s.c_str());
-
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
-
-  PyObject *kwargs = PyDict_New();
-  for (auto const &item : keywords) {
-    PyDict_SetItemString(kwargs, item.first.c_str(),
-                         PyString_FromString(item.second.c_str()));
-  }
-
-  PyObject *res = PyObject_Call(
-      detail::_interpreter::get().s_python_function_loglog, plot_args, kwargs);
-
-  Py_DECREF(plot_args);
-  Py_DECREF(kwargs);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
+  return detail::plot_base(detail::_interpreter::get().s_python_function_loglog,
+                           x, y, s, keywords);
 }
 
 template <typename VectorX, typename VectorY>
