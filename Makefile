@@ -13,7 +13,12 @@ linkings = -lpython3.7
 # Compiler definitions
 definitions = -std=c++11
 
+# Eigen include
+eigen_include = -I /usr/local/include/eigen3
+
 examples: minimal basic modern animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
+
+eigen: eigen_basic
 
 minimal: examples/minimal.cpp matplotlibcpp.h
 	cd examples && g++ -DWITHOUT_NUMPY minimal.cpp ${includes} ${linkings} -o minimal ${definitions}
@@ -54,6 +59,9 @@ fill: examples/fill.cpp matplotlibcpp.h
 	
 update: examples/update.cpp matplotlibcpp.h
 	cd examples && g++ update.cpp ${includes} ${linkings} -o update ${definitions}
+
+eigen_basic: examples/eigen/basic.cpp matplotlibcpp.h
+	cd examples/eigen && g++ basic.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
 
 clean:
 	rm -f examples/{minimal,basic,modern,animation,nonblock,xkcd,quiver,bar,surface,subplot,fill_inbetween,fill,update}
