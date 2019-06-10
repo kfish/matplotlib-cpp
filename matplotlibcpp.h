@@ -1535,7 +1535,7 @@ inline void xkcd() {
   Py_DECREF(kwargs);
 
   if (!res)
-    throw std::runtime_error("Call to show() failed.");
+    throw std::runtime_error("Call to xkcd() failed.");
 
   Py_DECREF(res);
 }
