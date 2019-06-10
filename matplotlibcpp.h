@@ -436,36 +436,64 @@ template <typename Vector> PyObject *get_array(const Vector &v) {
 #endif // WITHOUT_NUMPY
 
 template <typename VectorX, typename VectorY>
-bool plot(const VectorX &x, const VectorY &y,
-          const std::map<std::string, std::string> &keywords) {
+bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
+          const std::map<std::string, std::string> &keywords = {}) {
   assert(x.size() == y.size());
 
-  // using numpy arrays
   PyObject *xarray = get_array(x);
   PyObject *yarray = get_array(y);
 
-  // construct positional args
-  PyObject *args = PyTuple_New(2);
-  PyTuple_SetItem(args, 0, xarray);
-  PyTuple_SetItem(args, 1, yarray);
+  PyObject *pystring = PyString_FromString(s.c_str());
 
-  // construct keyword args
+  PyObject *plot_args = PyTuple_New(3);
+  PyTuple_SetItem(plot_args, 0, xarray);
+  PyTuple_SetItem(plot_args, 1, yarray);
+  PyTuple_SetItem(plot_args, 2, pystring);
+
   PyObject *kwargs = PyDict_New();
-  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
-       it != keywords.end(); ++it) {
-    PyDict_SetItemString(kwargs, it->first.c_str(),
-                         PyString_FromString(it->second.c_str()));
+  for (auto const &item : keywords) {
+    PyDict_SetItemString(kwargs, item.first.c_str(),
+                         PyString_FromString(item.second.c_str()));
   }
 
   PyObject *res = PyObject_Call(
-      detail::_interpreter::get().s_python_function_plot, args, kwargs);
+      detail::_interpreter::get().s_python_function_plot, plot_args, kwargs);
 
-  Py_DECREF(args);
+  Py_DECREF(plot_args);
   Py_DECREF(kwargs);
   if (res)
     Py_DECREF(res);
 
   return res;
+}
+
+template <typename VectorX, typename VectorY>
+bool plot(const VectorX &x, const VectorY &y,
+          const std::map<std::string, std::string> &keywords) {
+  return plot(x, y, "", keywords);
+}
+
+template <typename VectorY>
+bool plot(const VectorY &y, const std::string &format = "",
+          const std::map<std::string, std::string> &keywords = {}) {
+  // TODO can this be <size_t> or do we need <typename Vector::value_type>?
+  // before the conversion of this function from vector<Numeric> to Vector
+  // the created vector x was of the same type as y
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i;
+
+  return plot(x, y, format);
+}
+
+template <typename VectorY>
+bool plot(const VectorY &y,
+          const std::map<std::string, std::string> &keywords) {
+  std::vector<std::size_t> x(y.size());
+  for (std::size_t i = 0; i < x.size(); ++i)
+    x.at(i) = i;
+
+  return plot(x, y, "", keywords);
 }
 
 template <typename Numeric>
@@ -804,30 +832,6 @@ bool named_hist(std::string label, const std::vector<Numeric> &y,
 
   Py_DECREF(plot_args);
   Py_DECREF(kwargs);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
-}
-
-template <typename VectorX, typename VectorY>
-bool plot(const VectorX &x, const VectorY &y, const std::string &s = "") {
-  assert(x.size() == y.size());
-
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(s.c_str());
-
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
-
-  PyObject *res = PyObject_CallObject(
-      detail::_interpreter::get().s_python_function_plot, plot_args);
-
-  Py_DECREF(plot_args);
   if (res)
     Py_DECREF(res);
 
@@ -1174,17 +1178,6 @@ bool named_loglog(const std::string &name, const std::vector<Numeric> &x,
   return res;
 }
 
-template <typename Vector>
-bool plot(const Vector &y, const std::string &format = "") {
-  // TODO can this be <size_t> or do we need <typename Vector::value_type>?
-  // before the conversion of this function from vector<Numeric> to Vector
-  // the created vector x was of the same type as y
-  std::vector<size_t> x(y.size());
-  for (size_t i = 0; i < x.size(); ++i)
-    x.at(i) = i;
-  return plot(x, y, format);
-}
-
 template <typename Numeric>
 bool stem(const std::vector<Numeric> &y, const std::string &format = "") {
   std::vector<Numeric> x(y.size());
@@ -1287,6 +1280,8 @@ inline void figure_size(size_t w, size_t h) {
 }
 
 inline void legend() {
+  detail::_interpreter::get();
+
   PyObject *res =
       PyObject_CallObject(detail::_interpreter::get().s_python_function_legend,
                           detail::_interpreter::get().s_python_empty_tuple);
@@ -1297,6 +1292,8 @@ inline void legend() {
 }
 
 template <typename Numeric> void ylim(Numeric left, Numeric right) {
+  detail::_interpreter::get();
+
   PyObject *list = PyList_New(2);
   PyList_SetItem(list, 0, PyFloat_FromDouble(left));
   PyList_SetItem(list, 1, PyFloat_FromDouble(right));
@@ -1314,6 +1311,8 @@ template <typename Numeric> void ylim(Numeric left, Numeric right) {
 }
 
 template <typename Numeric> void xlim(Numeric left, Numeric right) {
+  detail::_interpreter::get();
+
   PyObject *list = PyList_New(2);
   PyList_SetItem(list, 0, PyFloat_FromDouble(left));
   PyList_SetItem(list, 1, PyFloat_FromDouble(right));
@@ -1331,6 +1330,8 @@ template <typename Numeric> void xlim(Numeric left, Numeric right) {
 }
 
 inline double *xlim() {
+  detail::_interpreter::get();
+
   PyObject *args = PyTuple_New(0);
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_xlim, args);
@@ -1349,6 +1350,8 @@ inline double *xlim() {
 }
 
 inline double *ylim() {
+  detail::_interpreter::get();
+
   PyObject *args = PyTuple_New(0);
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_ylim, args);
@@ -1488,6 +1491,8 @@ inline void subplot(long nrows, long ncols, long plot_number) {
 
 inline void title(const std::string &titlestr,
                   const std::map<std::string, std::string> &keywords = {}) {
+  detail::_interpreter::get();
+
   PyObject *pytitlestr = PyString_FromString(titlestr.c_str());
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pytitlestr);
