@@ -1040,59 +1040,6 @@ bool errorbar(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
 }
 
 template <typename Numeric>
-bool named_plot(const std::string &name, const std::vector<Numeric> &y,
-                const std::string &format = "") {
-  PyObject *kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs, "label", PyString_FromString(name.c_str()));
-
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(format.c_str());
-
-  PyObject *plot_args = PyTuple_New(2);
-
-  PyTuple_SetItem(plot_args, 0, yarray);
-  PyTuple_SetItem(plot_args, 1, pystring);
-
-  PyObject *res = PyObject_Call(
-      detail::_interpreter::get().s_python_function_plot, plot_args, kwargs);
-
-  Py_DECREF(kwargs);
-  Py_DECREF(plot_args);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
-}
-
-template <typename Numeric>
-bool named_plot(const std::string &name, const std::vector<Numeric> &x,
-                const std::vector<Numeric> &y, const std::string &format = "") {
-  PyObject *kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs, "label", PyString_FromString(name.c_str()));
-
-  PyObject *xarray = get_array(x);
-  PyObject *yarray = get_array(y);
-
-  PyObject *pystring = PyString_FromString(format.c_str());
-
-  PyObject *plot_args = PyTuple_New(3);
-  PyTuple_SetItem(plot_args, 0, xarray);
-  PyTuple_SetItem(plot_args, 1, yarray);
-  PyTuple_SetItem(plot_args, 2, pystring);
-
-  PyObject *res = PyObject_Call(
-      detail::_interpreter::get().s_python_function_plot, plot_args, kwargs);
-
-  Py_DECREF(kwargs);
-  Py_DECREF(plot_args);
-  if (res)
-    Py_DECREF(res);
-
-  return res;
-}
-
-template <typename Numeric>
 bool named_semilogx(const std::string &name, const std::vector<Numeric> &x,
                     const std::vector<Numeric> &y,
                     const std::string &format = "") {

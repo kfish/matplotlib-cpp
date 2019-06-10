@@ -36,7 +36,7 @@ int main() {
   plt::axis("equal");
 
   // Plot sin once and for all.
-  plt::named_plot("sin", x, y);
+  plt::plot(x, y, {{"label", "sin"}});
 
   // Prepare plotting the tangent.
   plt::Plot plot("tangent");
