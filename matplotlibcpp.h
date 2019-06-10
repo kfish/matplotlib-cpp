@@ -290,6 +290,8 @@ private:
 inline void backend(const std::string &name) { detail::s_backend = name; }
 
 inline bool annotate(std::string annotation, double x, double y) {
+  detail::_interpreter::get();
+
   PyObject *xy = PyTuple_New(2);
   PyObject *str = PyString_FromString(annotation.c_str());
 
