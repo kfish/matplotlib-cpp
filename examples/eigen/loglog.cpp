@@ -29,8 +29,9 @@ int main() {
   // Add graph title
   plt::title("Sample figure");
 
-  // Enable legend.
-  plt::legend();
+  // Put the legend in the center of the bottom right quadrant.
+  // First argument: loc, second: bbox_to_anchor
+  plt::legend("center", {0.5, 0, 0.5, 0.5});
 
   // show figure
   plt::show();
