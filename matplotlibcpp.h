@@ -1161,12 +1161,25 @@ inline void figure_size(size_t w, size_t h) {
   Py_DECREF(res);
 }
 
-inline void legend() {
+template <typename Vector = std::vector<double>>
+inline void legend(const std::string &loc = "best",
+                   const Vector &bbox_to_anchor = Vector()) {
   detail::_interpreter::get();
 
+  PyObject *kwargs = PyDict_New();
+  PyDict_SetItemString(kwargs, "loc", PyString_FromString(loc.c_str()));
+
+  if (bbox_to_anchor.size() == 2 || bbox_to_anchor.size() == 4) {
+    PyObject *bbox = get_array(bbox_to_anchor);
+    PyDict_SetItemString(kwargs, "bbox_to_anchor", bbox);
+  }
+
   PyObject *res =
-      PyObject_CallObject(detail::_interpreter::get().s_python_function_legend,
-                          detail::_interpreter::get().s_python_empty_tuple);
+      PyObject_Call(detail::_interpreter::get().s_python_function_legend,
+                    detail::_interpreter::get().s_python_empty_tuple, kwargs);
+
+  Py_DECREF(kwargs);
+
   if (!res)
     throw std::runtime_error("Call to legend() failed.");
 
