@@ -18,7 +18,7 @@ eigen_include = -I /usr/local/include/eigen3
 
 examples: minimal basic modern animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
 
-eigen: eigen_basic eigen_modern eigen_loglog
+eigen: eigen_basic eigen_modern eigen_loglog eigen_semilogx eigen_semilogy
 
 minimal: examples/minimal.cpp matplotlibcpp.h
 	cd examples && g++ -DWITHOUT_NUMPY minimal.cpp ${includes} ${linkings} -o minimal ${definitions}
@@ -68,6 +68,12 @@ eigen_modern: examples/eigen/modern.cpp matplotlibcpp.h
 
 eigen_loglog: examples/eigen/loglog.cpp matplotlibcpp.h
 	cd examples/eigen && g++ loglog.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
+
+eigen_semilogx: examples/eigen/semilogx.cpp matplotlibcpp.h
+	cd examples/eigen && g++ semilogx.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
+
+eigen_semilogy: examples/eigen/semilogy.cpp matplotlibcpp.h
+	cd examples/eigen && g++ semilogy.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
 
 clean:
 	rm -f examples/{minimal,basic,modern,animation,nonblock,xkcd,quiver,bar,surface,subplot,fill_inbetween,fill,update}
