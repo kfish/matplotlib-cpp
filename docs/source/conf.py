@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Matplotlib for C++'
-copyright = '2014, Benno Evers'
+copyright = 'Documentation: 2019, Julien Gacon. Library: 2014, Benno Evers'
 author = 'See https://github.com/Cryoris/matplotlib-cpp/'
 
 
