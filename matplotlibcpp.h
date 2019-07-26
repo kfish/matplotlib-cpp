@@ -1186,12 +1186,12 @@ inline void legend(const std::string &loc = "best",
   Py_DECREF(res);
 }
 
-template <typename Numeric> void ylim(Numeric left, Numeric right) {
+template <typename Numeric> void ylim(Numeric bottom, Numeric top) {
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(2);
-  PyList_SetItem(list, 0, PyFloat_FromDouble(left));
-  PyList_SetItem(list, 1, PyFloat_FromDouble(right));
+  PyList_SetItem(list, 0, PyFloat_FromDouble(bottom));
+  PyList_SetItem(list, 1, PyFloat_FromDouble(top));
 
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, list);
@@ -1254,8 +1254,8 @@ inline double *ylim() {
   PyObject *right = PyTuple_GetItem(res, 1);
 
   double *arr = new double[2];
-  arr[0] = PyFloat_AsDouble(left);
-  arr[1] = PyFloat_AsDouble(right);
+  arr[0] = PyFloat_AsDouble(bottom);
+  arr[1] = PyFloat_AsDouble(top);
 
   if (!res)
     throw std::runtime_error("Call to ylim() failed.");
@@ -1432,15 +1432,15 @@ inline void suptitle(const std::string &suptitlestr,
   Py_DECREF(res);
 }
 
-inline void axis(const std::string &axisstr) {
-  PyObject *str = PyString_FromString(axisstr.c_str());
+inline void axis(const std::string &option) {
+  PyObject *str = PyString_FromString(option.c_str());
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, str);
 
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_axis, args);
   if (!res)
-    throw std::runtime_error("Call to title() failed.");
+    throw std::runtime_error("Call to axis() failed.");
 
   Py_DECREF(args);
   Py_DECREF(res);
