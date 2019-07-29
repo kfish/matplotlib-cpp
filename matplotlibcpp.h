@@ -446,7 +446,8 @@ namespace detail {
 // @param s The formatting string for colour, marker and linestyle
 // @param keywords Additional keywords, such as label
 // @return true if plot was successful, false otherwise
-template <typename VectorX, typename VectorY>
+template <typename VectorX = std::vector<double>,
+          typename VectorY = std::vector<double>>
 bool plot_base(PyObject *const pyfunc, const VectorX &x, const VectorY &y,
                const std::string &s = "",
                const std::map<std::string, std::string> &keywords = {}) {
@@ -493,7 +494,7 @@ bool plot(const VectorX &x, const VectorY &y,
   return plot(x, y, "", keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y, const std::string &format = "",
           const std::map<std::string, std::string> &keywords = {}) {
   // TODO can this be <size_t> or do we need <typename Vector::value_type>?
@@ -506,7 +507,7 @@ bool plot(const VectorY &y, const std::string &format = "",
   return plot(x, y, format);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
@@ -529,7 +530,7 @@ bool loglog(const VectorX &x, const VectorY &y,
   return loglog(x, y, "", keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool loglog(const VectorY &y, const std::string &s = "",
             const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
@@ -539,7 +540,7 @@ bool loglog(const VectorY &y, const std::string &s = "",
   return loglog(x, y, s, keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool loglog(const VectorY &y,
             const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
@@ -1250,8 +1251,8 @@ inline double *ylim() {
   PyObject *args = PyTuple_New(0);
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_ylim, args);
-  PyObject *left = PyTuple_GetItem(res, 0);
-  PyObject *right = PyTuple_GetItem(res, 1);
+  PyObject *bottom = PyTuple_GetItem(res, 0);
+  PyObject *top = PyTuple_GetItem(res, 1);
 
   double *arr = new double[2];
   arr[0] = PyFloat_AsDouble(bottom);
@@ -1663,6 +1664,7 @@ inline void tight_layout() {
   Py_DECREF(res);
 }
 
+#if 0
 // recursion stop for the below
 template <typename... Args> bool plot() { return true; }
 
@@ -1688,6 +1690,7 @@ inline bool plot(const std::vector<double> &x, const std::vector<double> &y,
                  const std::map<std::string, std::string> &keywords) {
   return plot<std::vector<double>, std::vector<double>>(x, y, keywords);
 }
+#endif
 
 /*
  * This class allows dynamic plots, ie changing the plotted data without
