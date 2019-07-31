@@ -5,154 +5,6 @@ The Docs
 
 .. _STL vector: https://en.cppreference.com/w/cpp/container/vector
 
-How to use this documentation
-=============================
-
-Function definitions
-++++++++++++++++++++
-
-To find the definition and explanations for a special command use
-the search field on the top left, since this page can get a bit lengthy.
-
-Help for compiling
-++++++++++++++++++
-
-The section :ref:`Compiling a program <compile>` explains the compilations of
-a program using the ``matplotlibcpp.h`` header.
-
-Supplementary explanations
-++++++++++++++++++++++++++
-
-The sections :ref:`The formatting string <style>` and
-:ref:`Additional keywords<keywords>` are supplementary for explaining options
-in the plot commands.
-
-.. _compile:
-
-Compiling a program
-===================
-
-Requirements
-++++++++++++
-
-Matplotlib for C++ requires a working Python installation as well as
-Matplotlib. Python2.7 and Python3 (>= 3.6) have been tested, but
-other versions should work as well. In the linking process the exact
-version of Python to use can be specified by linking the according library.
-
-On Unix it is recommended to install Python via the package manager to
-assert that all dependencies are installed properly.
-
-.. code-block:: bash
-
-   <package-manager> install python3 python3-dev  # or -devel depending on the platform
-
-If Python is installed from source problems in the linking may occur.
-How to resolve these is explained in the next section, or in
-:ref:`this <pyfromsource>` code-block.
-
-Install matplotlib via pip
-
-.. code-block:: bash
-
-  pip3 install matplotlib  # or pip for Python 2
-
-Includes and Linking
-++++++++++++++++++++
-
-The header ``matplotlibcpp.h`` depends on the Python header, ``Python.h``,
-the corresponding Python library ``libpython``, and on ``numpy/arrayobject.h``.
-If not in the standard include paths, the paths to the header files,
-the path to the library, and the library itself have to be specified
-for the compiler using the options ``-I``, ``-L`` and ``-l`` respectively.
-Note, that all Python constituents should be of the same Python version.
-Matplotlib for C++ supports both, Python 2.7 and Python 3 versions.
-
-In detail:
-
-  - The Python header ``Python.h``
-
-    The Python header comes with the Python installation. It it cannot be
-    found on your system try installing the Python development packages.
-    The location of this header has to be specified using the option ``-I``.
-
-    Typical locations:
-
-    - Linux: `/usr/local/include/python3.7`
-    - Mac: if installed with Homebrew `/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/include/python3.7m`
-
-  - The Python library ``libpython*.so``
-
-    The program has to be linked against the compiled Python library.
-    Depending on the Python version the name of the library differs, for
-    Python 3.7 it is ``libpython3.7.so`` (or ``libpython3.7m.so``).
-    Then link the library by specifying ``-lpython3.7`` (or ``-lpython3.7m``).
-
-    Additionally to the linking the location of the library must be specified
-    if not installed in the usual directory. For Linux systems this is
-    usually not necessary, for Mac however it mostly is.
-    The location of the library has to be specified using the option ``-L``.
-
-    If Python has not been installed using the package manager (but e.g.
-    from source) twofold problems with linking the library can occur.
-    The first are missing dependencies of the Python library, these can be
-    added via ``-lpthread -lutil -ldl``.
-    The second is that dynamic libraries have to be exported which is
-    resolved by adding ``-Xlinker -export-dynamic``.
-
-    Typical locations:
-
-    - Linux: Path usually already included
-    - Mac: `/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib`
-
-  - Numpy array ``numpy/arrayobject.h``
-
-    By default Matplotlib for C++ uses Numpy arrays. This requires the above
-    header file. However it is possible to avoid this header by defining
-    ``-DWITHOUT_NUMPY``.
-
-    - Linux: `/usr/local/lib/python3.7/site-packages/numpy/core/include`
-    - Mac: If installed via Homebrew, same as for Linux.
-
-**Examples**
-
-On Linux with the GNU compiler ``g++`` and
-C++11.
-
-.. code-block:: bash
-
-   # using Python 2.7
-   g++ main.cpp -std=c++11 -I/usr/local/include/python2.7 \
-     -I/usr/local/lib/python2.7/site-packages/numpy/core/include -lpython2.7
-
-.. code-block:: bash
-
-   # using Python3.7 and no Numpy
-   g++ main.cpp -std=c++11 -DWITHOUT_NUMPY -I/usr/local/include/python2.7 -lpython2.7
-
-On Mac with the GNU compiler ``g++`` and C++14.
-
-.. code-block:: bash
-
-   g++ main.cpp -std=c++14 \
-    -I /usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/include/python3.7m \
-    -I /usr/local/lib/python3.7/site-packages/numpy/core/include \
-    -L /usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib \
-    -lpython3.7
-
-With exporting dynamic libraries and linking to all dependencies of
-the Python library on a Linux system:
-
-.. _pyfromsource:
-
-.. code-block:: bash
-
-   g++ main.cpp -std=c++11 -I/usr/local/include/python3.7m \
-     -I/usr/local/lib/python3.7/site-packages/numpy/core/include \
-     -lpython3.7m \ 
-     -lpthread -lutil -ldl \ # library dependencies
-     -Xlinker -export-dynamic \ # export dynamic libraries
-
 
 .. _style:
 
@@ -161,16 +13,9 @@ The formatting string
 
 Bla
 
-.. _keywords:
 
-Additional keywords
-===================
-
-Bla
-
-
-Plot commands
-=============
+The `Vector` type
+=================
 
 .. cpp:type:: Vector
 
@@ -212,10 +57,21 @@ Plot commands
       Return a pointer directly behind the last element of the data in the vector.
 
 
+Plot commands
+=============
+
+.. _mpl_plot: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html
+
 .. cpp:function::
       template <typename VectorX, typename VectorY> \
       bool plot(const VectorX &x, const VectorY &y, const std::string &s = "", \
       const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_plot_
 
    Plot `y` versus `x`.
 
@@ -229,7 +85,7 @@ Plot commands
    :param x: :math:`x` data for the plot
    :param y: :math:`y` data for the plot
    :param s: (optional) formatting string, see :ref:`here <style>`
-   :param keywords: (optional) map specifying additional keywords, see :ref:`here <keywords>`
+   :param keywords: (optional) map specifying additional keywords, see `here <mpl_plot_>`_
    :returns: true if no error has occured, false otherwise
 
    **Minimal working example**
@@ -278,6 +134,12 @@ Plot commands
       bool plot(const VectorY &y, const std::string &format = "", \
                 const std::map<std::string, std::string> &keywords = {})
 
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_plot_
+
    Plot `y`.
 
    For a vector :math:`y` of size :math:`n`, the :math:`x` data
@@ -289,13 +151,44 @@ Plot commands
    :tparam VectorY: vector-like type, see :cpp:type:`Vector`
    :param y: :math:`y` data for the plot
    :param s: (optional) formatting string, see :ref:`here <style>`
-   :param keywords: (optional) map specifying additional keywords, see :ref:`here <keywords>`
+   :param keywords: (optional) map specifying additional keywords, see `here <mpl_plot_>`_
    :returns: true if no error has occured, false otherwise
+
+   **Examples**
+
+   .. code-block:: cpp
+
+      #include <vector>
+      #include "matplotlibcpp.h"
+      namespace plt = matplotlibcpp;
+
+      int main() {
+
+        std::vector<int> y = {1, 2, 3};
+        plt::plot(y, "bo-");
+        plt::show();
+
+        return 0;
+      }
+
+   .. code-block:: cpp
+
+      Eigen::VectorXd y = {1, 2, 3};
+      plt::plot(y, {{"label", "1 to 3"}});
+      plt::show();
+
+.. _mpl_loglog: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.loglog.html
 
 .. cpp:function::
       template <typename VectorX, typename VectorY> \
       bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "", \
                   const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_loglog_
 
    Plot `y` versus `x` in double logarithmic scale.
 
@@ -305,10 +198,42 @@ Plot commands
       All following plots will be in double logarithmic scale,
       also calls to `plot`.
 
+   **Example**
+
+   .. code-block:: cpp
+
+      #include <Eigen/Dense>
+      #include "matplotlibcpp.h"
+      namespace plt = matplotlibcpp;
+
+      int main() {
+        int n = 5000;
+        Eigen::VectorXd x(n), y(n), z(n), w = Eigen::VectorXd::Ones(n);
+        for (int i = 0; i < n; ++i) {
+          double value = (1.0 + i) / n;
+          x(i) = value;
+          y(i) = value * value;
+          z(i) = value * value * value;
+        }
+
+        plt::loglog(x, y);         // f(x) = x^2
+        plt::loglog(x, w, "r--");  // f(x) = 1, red dashed line
+        plt::loglog(x, z, "g:", {{"label", "$x^3$"}}); // f(x) = x^3, green dots + label
+
+        plt::title("Some functions of $x$"); // add a title
+        plt::show();
+      }
+
 .. cpp:function::
       template <typename VectorY> \
       bool loglog(const VectorY &y, const std::string &s = "", \
                   const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_loglog_
 
    Plot `y` in double logarithmic scale.
 
@@ -318,10 +243,36 @@ Plot commands
       All following plots will be in double logarithmic scale,
       also calls to `plot`.
 
+   **Examples**
+
+   Assuming ``vector`` and ``matplotlibcpp`` import and the namespace
+   definition ``plt = matplotlibcpp``.
+
+   .. code-block:: cpp
+
+      std::vector<int> y = {1, 10, 100, 1000};
+      plt::loglog(y);
+
+   .. code-block:: cpp
+
+      std::vector<double> y1 = {1, 2, 4},
+                          y2 = {1, 3, 9};
+      plt::loglog(y, "bo-", {{"label", "powers of 2"}});
+      plt::plot(y, "ro-", {{"label", "powers of 3"}});  // also in loglog scale
+
+
+.. _mpl_semilogx: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogx.html
+
 .. cpp:function::
       template <typename VectorX, typename VectorY> \
       bool semilogx(const VectorX &x, const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_semilogx_
 
    Plot `y` versus `x` in logarithmic `x` and linear `y` scale.
 
@@ -336,6 +287,12 @@ Plot commands
       bool semilogx(const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_semilogx_
+
    Plot `y` in logarithmic `x` and linear `y` scale.
 
    See :cpp:func:`plot` for explanation of the parameters.
@@ -344,10 +301,19 @@ Plot commands
       All following plots will inherit the logarithmic `x` scale,
       also calls to `plot`.
 
+
+.. _mpl_semilogy: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogy.html
+
 .. cpp:function::
       template <typename VectorX, typename VectorY> \
       bool semilogy(const VectorX &x, const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_semilogy_
 
    Plot `y` versus `x` in linear `x`  and logarithmic `y` scale.
 
@@ -362,6 +328,12 @@ Plot commands
       bool semilogy(const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_semilogy_
+
    Plot `y` in linear `x` and logarithmic `y` scale.
 
    See :cpp:func:`plot` for explanation of the parameters.
@@ -370,13 +342,59 @@ Plot commands
       All following plots will inherit the logarithmic `y` scale,
       also calls to `plot`.
 
+.. _mpl_text: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.text.html
+
+.. cpp:function::
+      template <typename Numeric> \
+      void text(Numeric x, Numeric y, const std::string &s = "")
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_text_
+
+   Place text at location :math:`(x,y)`.
+
+   :tparam Numeric: A scalar-like type
+   :param x: The :math:`x` location of the text
+   :param y: The :math:`y` location of the text
+   :param s: The text to be placed in the plot
+
+   **Example**
+
+   .. code-block:: cpp
+
+      #include <vector>
+      #include "matplotlibcpp.h"
+      namespace plt = matplotlibcpp;
+
+      int main() {
+
+        std::vector<double> x = {0.1, 0.2, 0.5};
+        plt::plot(x, "s");
+        plt::text(1.0, 0.1, "Text under a square");
+        plt::show();
+
+        return 0;
+      }
+
+
 .. _layout:
 
 Figure commands
 ===============
 
+.. _mpl_figure: https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.figure.html
+
 .. cpp:function::
       inline long figure(long number = -1)
+
+    .. image:: ../matplotlib_icon.png
+       :align: right
+       :width: 20px
+       :height: 20px
+       :target: mpl_figure_
 
     Initialise a new figure with the ID `number`.
 
@@ -400,10 +418,19 @@ Figure commands
     :param w: The width of the figure in inches
     :param h: The height of the figure in inches
 
+
+.. _mpl_legend: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.legend.html
+
 .. cpp:function::
       template <typename Vector = std::vector<double>> \
       inline void legend(const std::string &loc = "best", \
                          const Vector &bbox_to_anchor = Vector())
+
+    .. image:: ../matplotlib_icon.png
+       :align: right
+       :width: 20px
+       :height: 20px
+       :target: mpl_legend_
 
     Set the figure legend.
 
@@ -419,19 +446,42 @@ Figure commands
                The coordinates are interpreted in the same units as the
                plot axes (thus no normalised coordinates)
 
+     .. code-block:: cpp
+
+        // Put the legend in the center of the bottom right quadrant.
+        // First argument: loc, second: bbox_to_anchor
+        plt::legend("center", {0.5, 0, 0.5, 0.5});
+
+
+.. _mpl_xlim: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html
+
 .. cpp:function::
       template <typename Numeric> \
       void xlim(Numeric left, Numeric right)
 
-    Set the `y` axis limits.
+    .. image:: ../matplotlib_icon.png
+       :align: right
+       :width: 20px
+       :height: 20px
+       :target: mpl_xlim_
+
+    Set the `x` axis limits.
 
     :tparam Numeric: A scalar-like type
     :param left: The left axis limit
     :param right: The right axis limit
 
+.. _mpl_ylim: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ylim.html
+
 .. cpp:function::
       template <typename Numeric> \
       void ylim(Numeric bottom, Numeric top)
+
+    .. image:: ../matplotlib_icon.png
+       :align: right
+       :width: 20px
+       :height: 20px
+       :target: mpl_ylim_
 
     Set the `y` axis limits.
 
@@ -446,9 +496,74 @@ Figure commands
 
     :return: A pointer to an array of length 2 containing `[left, right]`
 
+
 .. cpp:function::
       inline double *ylim()
 
     Get the `y` axis limits.
 
     :return: A pointer to an array of length 2 containing `[bottom, top]`
+
+
+.. _mpl_title: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.title.html
+
+.. cpp:function::
+      inline void title(const std::string &titlestr, \
+                        const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_title_
+
+   Set the title of the plot.
+
+   :param titlestr: Title of the plot
+   :param keywords: Additional keywords, see `here <mpl_title_>`_ for a list
+
+
+.. _mpl_suptitle: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.suptitle.html
+
+.. cpp:function::
+        inline void suptitle(const std::string &suptitlestr, \
+                             const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_suptitle_
+
+   Add a centered title to the figure.
+
+   :param suptitlestr: Title of the figure
+   :param keywords: Additional keywords, see `here <mpl_suptitle_>`_ for a list
+
+.. _mpl_axis: https://matplotlib.org/api/_as_gen/matplotlib.pyplot.axis.html
+
+.. cpp:function::
+      inline void axis(const std::string &option)
+
+   .. image:: ../matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_suptitle_
+
+   Set some axis properties.
+
+   :param option: The option to activate
+
+   ========= ================================================
+   option     Result
+   ========= ================================================
+   `on`      Turn on axis lines and labels
+   `off`     Turn off axis lines and labels
+   `equal`	  Set equal scaling (i.e., make circles circular) by changing axis limits.
+   `scaled`	Set equal scaling (i.e., make circles circular) by changing dimensions of the plot box.
+   `tight` 	Set limits just large enough to show all data.
+   `auto`	  Automatic scaling (fill plot box with data).
+   `image`	  `scaled` with axis limits equal to data limits.
+   `square`	Square plot; similar to `scaled`, but initially forcing same x- and y-axis length.
+   ========= ================================================
