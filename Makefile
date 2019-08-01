@@ -1,11 +1,11 @@
 # Put the path to your Python.h here
-includes = -I /usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/include/python3.7m
+includes = -I /usr/local/Cellar/python/3.7.4/Frameworks/Python.framework/Versions/3.7/include/python3.7m
 
 # Numpy include
 includes +=  -I /usr/local/lib/python3.7/site-packages/numpy/core/include
 
 # Add the path to the directory containing libpython*.a here if the linking fails
-includes += -L /usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib
+includes += -L /usr/local/Cellar/python/3.7.4/Frameworks/Python.framework/Versions/3.7/lib
 
 # Link your python version
 linkings = -lpython3.7
