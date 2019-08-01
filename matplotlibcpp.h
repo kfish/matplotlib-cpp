@@ -823,10 +823,9 @@ bool fill_between(const std::vector<Numeric> &x, const std::vector<Numeric> &y1,
   return res;
 }
 
-template <typename Numeric>
-bool hist(const std::vector<Numeric> &y, long bins = 10,
-          std::string color = "b", double alpha = 1.0,
-          bool cumulative = false) {
+template <typename VectorY>
+bool hist(const VectorY &y, long bins = 10, std::string color = "b",
+          double alpha = 1.0, bool cumulative = false) {
 
   PyObject *yarray = get_array(y);
 
@@ -851,10 +850,12 @@ bool hist(const std::vector<Numeric> &y, long bins = 10,
   return res;
 }
 
-template <typename NumericX, typename NumericY>
-bool scatter(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-             const double s = 1.0) // The marker size in points**2
-{
+// @brief Scatter plot
+// @param x x-coordinates of the 2d points
+// @param y y-coordinates of the 2d points
+// @param s the marker size  in points**2
+template <typename VectorX, typename VectorY>
+bool scatter(const VectorX &x, const VectorY &y, const double s = 1.0) {
   assert(x.size() == y.size());
 
   PyObject *xarray = get_array(x);
