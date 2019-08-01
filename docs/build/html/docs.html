@@ -85,7 +85,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-formatting-string">The formatting string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-style-of-a-line">The style of a line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#marker">Marker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#color">Color</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#character-code">Character code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#full-name">Full name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hex-code">HEX code</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#line">Line</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#the-vector-type">The <cite>Vector</cite> type</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plot-commands">Plot commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#figure-commands">Figure commands</a></li>
@@ -160,9 +170,132 @@
             
   <div class="section" id="the-docs">
 <span id="docs"></span><h1>The Docs<a class="headerlink" href="#the-docs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="the-formatting-string">
-<span id="style"></span><h2>The formatting string<a class="headerlink" href="#the-formatting-string" title="Permalink to this headline">¶</a></h2>
-<p>Bla</p>
+<div class="section" id="the-style-of-a-line">
+<span id="style"></span><h2>The style of a line<a class="headerlink" href="#the-style-of-a-line" title="Permalink to this headline">¶</a></h2>
+<p>The style of a line in a plot has three characteristics; the
+marker, the color and the line.
+They can be specified using the keywords map
+or the formatting string.</p>
+<p>They keywords map is a possibility to specify additional parameters
+for the plot commands. To set the line style it can be used as follows.
+.. code-block:: cpp</p>
+<blockquote>
+<div><p>// for a red dashed line with circle markers
+plt::plot(x, y, {{“color”, “red”}, {“marker”: “o”}, {“linestyle”: “–”}})</p>
+<p>// shorthand notation for color and linestyle is usually supported
+plt::plot(x, y, {{“c”, “red”}, {“marker”: “o”}, {“ls”: “–”}})</p>
+</div></blockquote>
+<p>See sections <a class="reference internal" href="#marker">Marker</a>, <a class="reference internal" href="#color">Color</a> and <a class="reference internal" href="#line">Line</a>
+for supported values.</p>
+<p>The formatting string is a convenient notation to set the style of a line.
+Almost all plot commands support the formatting string as
+first argument after the <cite>x</cite> and <cite>y</cite> data.</p>
+<p>A formatting string’s structure is
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">s</span> <span class="pre">=</span> <span class="pre">&quot;&lt;marker&gt;&lt;color&gt;&lt;line&gt;&quot;</span>
+<span class="pre">`</span></code></p>
+<p>The rules are</p>
+<blockquote>
+<div><ol class="loweralpha simple" start="24">
+<li>The valid parameters (<code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>) are listed in the following sections.</li>
+</ol>
+<ol class="loweralpha simple" start="24">
+<li>Different ordering of the parameters is supported.
+However, to avoid ambiguity this order should be used throughout.</li>
+</ol>
+<ol class="loweralpha simple" start="24">
+<li>Parameters might be dropped.</li>
+</ol>
+<ol class="loweralpha simple" start="24">
+<li>If only the colour parameters is specified, more color
+parameters are supported, see section <a class="reference internal" href="#color">Color</a>.</li>
+</ol>
+</div></blockquote>
+<p><strong>Examples</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;b&quot;</span>    <span class="c1">// blue line</span>
+<span class="s">&quot;og&quot;</span>   <span class="c1">// green circles, no connecting line</span>
+<span class="s">&quot;og-&quot;</span>  <span class="c1">// green circles with connecting line</span>
+<span class="s">&quot;r--&quot;</span>  <span class="c1">// dashed red line</span>
+<span class="s">&quot;seagreen&quot;</span>  <span class="c1">// a solid line in the colour seagreen</span>
+<span class="s">&quot;#008000&quot;</span>   <span class="c1">// a solid line coloured in the HEX code</span>
+</pre></div>
+</div>
+<p>The following sections list the supported markers, colours and linestyles.</p>
+<div class="section" id="marker">
+<h3>Marker<a class="headerlink" href="#marker" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">character</th>
+<th class="head">marker</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘o’</td>
+<td>circle</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="color">
+<h3>Color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h3>
+<p>The color can be specified via a character code,
+a full name or a HEX code.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If a formatting string contains more parameters than just the color,
+only the character code is supported.</p>
+</div>
+<div class="section" id="character-code">
+<h4>Character code<a class="headerlink" href="#character-code" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">character</th>
+<th class="head">color</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘r’</td>
+<td>red</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="full-name">
+<h4>Full name<a class="headerlink" href="#full-name" title="Permalink to this headline">¶</a></h4>
+<p>E.g. seagreen</p>
+</div>
+<div class="section" id="hex-code">
+<h4>HEX code<a class="headerlink" href="#hex-code" title="Permalink to this headline">¶</a></h4>
+<p>Just use HEX</p>
+</div>
+</div>
+<div class="section" id="line">
+<h3>Line<a class="headerlink" href="#line" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">character</th>
+<th class="head">line</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘-‘</td>
+<td>solid</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="the-vector-type">
 <h2>The <cite>Vector</cite> type<a class="headerlink" href="#the-vector-type" title="Permalink to this headline">¶</a></h2>
