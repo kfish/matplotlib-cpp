@@ -3,116 +3,31 @@
 The Docs
 ********
 
+`matplotlibcpp` namespace
+=========================
+
+
+All functions are organised in the namespace `matplotlibcpp`.
+For convenience (and in spirit of the Python norm) we usually
+define the abbreviation `plt`:
+
+.. code-block:: cpp
+
+  #include "matplotlibcpp.h"
+  namespace plt = matplotlibcpp;
+
+The function can then be accessed via:
+
+.. code-block:: cpp
+
+  matplotlibcpp::plot(x, y);
+  plt::loglog(x, y);          // if we defined namespace plt = matplotlibcpp
+
+
+`Vector` type
+=============
+
 .. _STL vector: https://en.cppreference.com/w/cpp/container/vector
-
-
-.. _style:
-
-The style of a line
-===================
-
-The style of a line in a plot has three characteristics; the
-marker, the color and the line.
-They can be specified using the keywords map
-or the formatting string.
-
-They keywords map is a possibility to specify additional parameters
-for the plot commands. To set the line style it can be used as follows.
-.. code-block:: cpp
-
-  // for a red dashed line with circle markers
-  plt::plot(x, y, {{"color", "red"}, {"marker": "o"}, {"linestyle": "--"}})
-
-  // shorthand notation for color and linestyle is usually supported
-  plt::plot(x, y, {{"c", "red"}, {"marker": "o"}, {"ls": "--"}})
-
-See sections `Marker`_, `Color`_ and `Line`_
-for supported values.
-
-The formatting string is a convenient notation to set the style of a line.
-Almost all plot commands support the formatting string as
-first argument after the `x` and `y` data.
-
-A formatting string's structure is
-```
-s = "<marker><color><line>"
-```
-
-The rules are
-
-  x. The valid parameters (``<>``) are listed in the following sections.
-
-  x. Different ordering of the parameters is supported.
-     However, to avoid ambiguity this order should be used throughout.
-
-  x. Parameters might be dropped.
-
-  x. If only the colour parameters is specified, more color
-     parameters are supported, see section `Color`_.
-
-**Examples**
-
-.. code-block:: cpp
-
-   "b"    // blue line
-   "og"   // green circles, no connecting line
-   "og-"  // green circles with connecting line
-   "r--"  // dashed red line
-   "seagreen"  // a solid line in the colour seagreen
-   "#008000"   // a solid line coloured in the HEX code
-
-The following sections list the supported markers, colours and linestyles.
-
-Marker
-++++++
-
-========= ======
-character marker
-========= ======
-'o'       circle
-========= ======
-
-Color
-+++++
-
-The color can be specified via a character code,
-a full name or a HEX code.
-
-.. note::
-
-  If a formatting string contains more parameters than just the color,
-  only the character code is supported.
-
-Character code
-^^^^^^^^^^^^^^
-
-========= ======
-character color
-========= ======
-'r'       red
-========= ======
-
-Full name
-^^^^^^^^^
-
-E.g. seagreen
-
-HEX code
-^^^^^^^^
-
-Just use HEX
-
-Line
-++++
-
-========= ======
-character line
-========= ======
-'-'       solid
-========= ======
-
-The `Vector` type
-=================
 
 .. cpp:type:: Vector
 
@@ -157,6 +72,8 @@ The `Vector` type
 Plot commands
 =============
 
+.. cpp:namespace:: matplotlibcpp
+
 .. _mpl_plot: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html
 
 .. cpp:function::
@@ -164,7 +81,7 @@ Plot commands
       bool plot(const VectorX &x, const VectorY &y, const std::string &s = "", \
       const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -231,7 +148,7 @@ Plot commands
       bool plot(const VectorY &y, const std::string &format = "", \
                 const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -281,7 +198,7 @@ Plot commands
       bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "", \
                   const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -326,7 +243,7 @@ Plot commands
       bool loglog(const VectorY &y, const std::string &s = "", \
                   const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -365,7 +282,7 @@ Plot commands
       bool semilogx(const VectorX &x, const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -384,7 +301,7 @@ Plot commands
       bool semilogx(const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -406,7 +323,7 @@ Plot commands
       bool semilogy(const VectorX &x, const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -425,7 +342,7 @@ Plot commands
       bool semilogy(const VectorY &y, const std::string &s = "", \
                     const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -445,7 +362,7 @@ Plot commands
       template <typename Numeric> \
       void text(Numeric x, Numeric y, const std::string &s = "")
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -487,7 +404,7 @@ Figure commands
 .. cpp:function::
       inline long figure(long number = -1)
 
-    .. image:: ../matplotlib_icon.png
+    .. image:: ../img/matplotlib_icon.png
        :align: right
        :width: 20px
        :height: 20px
@@ -523,7 +440,7 @@ Figure commands
       inline void legend(const std::string &loc = "best", \
                          const Vector &bbox_to_anchor = Vector())
 
-    .. image:: ../matplotlib_icon.png
+    .. image:: ../img/matplotlib_icon.png
        :align: right
        :width: 20px
        :height: 20px
@@ -556,7 +473,7 @@ Figure commands
       template <typename Numeric> \
       void xlim(Numeric left, Numeric right)
 
-    .. image:: ../matplotlib_icon.png
+    .. image:: ../img/matplotlib_icon.png
        :align: right
        :width: 20px
        :height: 20px
@@ -574,7 +491,7 @@ Figure commands
       template <typename Numeric> \
       void ylim(Numeric bottom, Numeric top)
 
-    .. image:: ../matplotlib_icon.png
+    .. image:: ../img/matplotlib_icon.png
        :align: right
        :width: 20px
        :height: 20px
@@ -608,7 +525,7 @@ Figure commands
       inline void title(const std::string &titlestr, \
                         const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -626,7 +543,7 @@ Figure commands
         inline void suptitle(const std::string &suptitlestr, \
                              const std::map<std::string, std::string> &keywords = {})
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px
@@ -642,7 +559,7 @@ Figure commands
 .. cpp:function::
       inline void axis(const std::string &option)
 
-   .. image:: ../matplotlib_icon.png
+   .. image:: ../img/matplotlib_icon.png
       :align: right
       :width: 20px
       :height: 20px

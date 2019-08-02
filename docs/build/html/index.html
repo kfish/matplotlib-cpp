@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Compiling a program" href="compiling.html" /> 
+    <link rel="next" title="First examples" href="examples.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,8 +82,11 @@
             
               <p class="caption"><span class="caption-text">Content</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">First examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs.html">The Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style.html">The style of a line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">Frequent problems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html#questions">Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="todo.html">To do</a></li>
@@ -155,45 +158,16 @@
 <h1>Home<a class="headerlink" href="#home" title="Permalink to this headline">¶</a></h1>
 <p>This is the documentation to <em>Matplotlib for C++</em>, a C++ wrapper
 for Python’s <cite>matplotlib</cite> (MPL) plotting library.</p>
-<div class="section" id="a-short-overview">
-<h2>A short overview<a class="headerlink" href="#a-short-overview" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="the-github-repo">
-<h3>The GitHub repo<a class="headerlink" href="#the-github-repo" title="Permalink to this headline">¶</a></h3>
 <p>The code is organised in <a class="reference external" href="https://github.com/Cryoris/matplotlib-cpp">this</a>
 GitHub repository, which is a fork of
 <a class="reference external" href="https://github.com/lava/matplotlib-cpp">that</a> repository.</p>
-</div>
-<div class="section" id="purpose">
-<h3>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
 <p><em>This is</em>:
 A lightweight, easy-to-use interface to create stylish and clean plots in C++
 using basic MPL commands.</p>
-<p><em>This is</em> <strong>not</strong>:
+<p class="last"><em>This is</em> <strong>not</strong>:
 A translation of MPL to C++.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Content</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="compiling.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compiling.html#includes-and-linking">Includes and Linking</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="docs.html">The Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="docs.html#the-style-of-a-line">The style of a line</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs.html#the-vector-type">The <cite>Vector</cite> type</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs.html#plot-commands">Plot commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs.html#figure-commands">Figure commands</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html#questions">Questions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="todo.html">To do</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="todo.html#generalise-to-vector">Generalise to Vector</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 </div>
 <div class="section" id="how-to-use-this-documentation">
 <h2>How to use this documentation<a class="headerlink" href="#how-to-use-this-documentation" title="Permalink to this headline">¶</a></h2>
@@ -207,7 +181,7 @@ library MPL. Thus, to learn more about the functions that
 are eventually called the <a class="reference external" href="https://matplotlib.org/3.1.1/index.html">matplotlib documentation</a> might be useful.
 Most functions have a link to the MPL function they call, marked
 with the MPL logo:</p>
-<a class="reference external image-reference" href="https://matplotlib.org/3.1.1/index.html"><img alt="Clicking here leads to the corresponding function definition in MPL" class="align-center" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<a class="reference external image-reference" href="https://matplotlib.org/3.1.1/index.html"><img alt="Clicking here leads to the corresponding function definition in MPL" class="align-center" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>However, the function signatures might differ and Matplotlib for C++ does
 <em>not</em> support the full functionality of MPL.
 The purpose is providing an easy-to-use wrapper to MPL in C++, not
@@ -217,10 +191,53 @@ to fully translate the library.</p>
 <h3>Help for compiling<a class="headerlink" href="#help-for-compiling" title="Permalink to this headline">¶</a></h3>
 <p>The section <a class="reference internal" href="compiling.html#compiling"><span class="std std-ref">Compiling a program</span></a> explains the compilations of
 a program using the <code class="docutils literal notranslate"><span class="pre">matplotlibcpp.h</span></code> header.</p>
+</div>
+<div class="section" id="style-of-a-line">
+<h3>Style of a line<a class="headerlink" href="#style-of-a-line" title="Permalink to this headline">¶</a></h3>
+<p>Refer <a class="reference internal" href="style.html#style"><span class="std std-ref">The style of a line</span></a> to tune the appearance of the lines you plot.</p>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
 <p class="last">Criticism (preferably constructive), ideas and contributions
 are welcome! For contact, see <a class="reference internal" href="license.html#questions"><span class="std std-ref">Questions</span></a>.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Content</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">First examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#minimal-working-example">Minimal working example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#standard-usage">Standard usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#eigen-vectors">Eigen vectors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html#includes-and-linking">Includes and Linking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">The Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs.html#matplotlibcpp-namespace"><cite>matplotlibcpp</cite> namespace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs.html#vector-type"><cite>Vector</cite> type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs.html#plot-commands">Plot commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs.html#figure-commands">Figure commands</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style.html">The style of a line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="style.html#marker">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#color">Color</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">Frequent problems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="problems.html#figure-layout">Figure layout</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html#questions">Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">To do</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#generalise-to-vector">Generalise to Vector</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -234,7 +251,7 @@ are welcome! For contact, see <a class="reference internal" href="license.html#q
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="compiling.html" class="btn btn-neutral float-right" title="Compiling a program" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="First examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

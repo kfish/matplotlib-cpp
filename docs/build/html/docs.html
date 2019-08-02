@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="License" href="license.html" />
+    <link rel="next" title="The style of a line" href="style.html" />
     <link rel="prev" title="Compiling a program" href="compiling.html" /> 
 </head>
 
@@ -85,22 +85,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-style-of-a-line">The style of a line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#marker">Marker</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#color">Color</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#character-code">Character code</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#full-name">Full name</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#hex-code">HEX code</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#line">Line</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#the-vector-type">The <cite>Vector</cite> type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matplotlibcpp-namespace"><cite>matplotlibcpp</cite> namespace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vector-type"><cite>Vector</cite> type</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plot-commands">Plot commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#figure-commands">Figure commands</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="style.html">The style of a line</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html#questions">Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="todo.html">To do</a></li>
@@ -170,135 +161,23 @@
             
   <div class="section" id="the-docs">
 <span id="docs"></span><h1>The Docs<a class="headerlink" href="#the-docs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="the-style-of-a-line">
-<span id="style"></span><h2>The style of a line<a class="headerlink" href="#the-style-of-a-line" title="Permalink to this headline">¶</a></h2>
-<p>The style of a line in a plot has three characteristics; the
-marker, the color and the line.
-They can be specified using the keywords map
-or the formatting string.</p>
-<p>They keywords map is a possibility to specify additional parameters
-for the plot commands. To set the line style it can be used as follows.
-.. code-block:: cpp</p>
-<blockquote>
-<div><p>// for a red dashed line with circle markers
-plt::plot(x, y, {{“color”, “red”}, {“marker”: “o”}, {“linestyle”: “–”}})</p>
-<p>// shorthand notation for color and linestyle is usually supported
-plt::plot(x, y, {{“c”, “red”}, {“marker”: “o”}, {“ls”: “–”}})</p>
-</div></blockquote>
-<p>See sections <a class="reference internal" href="#marker">Marker</a>, <a class="reference internal" href="#color">Color</a> and <a class="reference internal" href="#line">Line</a>
-for supported values.</p>
-<p>The formatting string is a convenient notation to set the style of a line.
-Almost all plot commands support the formatting string as
-first argument after the <cite>x</cite> and <cite>y</cite> data.</p>
-<p>A formatting string’s structure is
-<code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">s</span> <span class="pre">=</span> <span class="pre">&quot;&lt;marker&gt;&lt;color&gt;&lt;line&gt;&quot;</span>
-<span class="pre">`</span></code></p>
-<p>The rules are</p>
-<blockquote>
-<div><ol class="loweralpha simple" start="24">
-<li>The valid parameters (<code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>) are listed in the following sections.</li>
-</ol>
-<ol class="loweralpha simple" start="24">
-<li>Different ordering of the parameters is supported.
-However, to avoid ambiguity this order should be used throughout.</li>
-</ol>
-<ol class="loweralpha simple" start="24">
-<li>Parameters might be dropped.</li>
-</ol>
-<ol class="loweralpha simple" start="24">
-<li>If only the colour parameters is specified, more color
-parameters are supported, see section <a class="reference internal" href="#color">Color</a>.</li>
-</ol>
-</div></blockquote>
-<p><strong>Examples</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;b&quot;</span>    <span class="c1">// blue line</span>
-<span class="s">&quot;og&quot;</span>   <span class="c1">// green circles, no connecting line</span>
-<span class="s">&quot;og-&quot;</span>  <span class="c1">// green circles with connecting line</span>
-<span class="s">&quot;r--&quot;</span>  <span class="c1">// dashed red line</span>
-<span class="s">&quot;seagreen&quot;</span>  <span class="c1">// a solid line in the colour seagreen</span>
-<span class="s">&quot;#008000&quot;</span>   <span class="c1">// a solid line coloured in the HEX code</span>
+<div class="section" id="matplotlibcpp-namespace">
+<h2><cite>matplotlibcpp</cite> namespace<a class="headerlink" href="#matplotlibcpp-namespace" title="Permalink to this headline">¶</a></h2>
+<p>All functions are organised in the namespace <cite>matplotlibcpp</cite>.
+For convenience (and in spirit of the Python norm) we usually
+define the abbreviation <cite>plt</cite>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;matplotlibcpp.h&quot;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">matplotlibcpp</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The following sections list the supported markers, colours and linestyles.</p>
-<div class="section" id="marker">
-<h3>Marker<a class="headerlink" href="#marker" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
-<colgroup>
-<col width="60%" />
-<col width="40%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">character</th>
-<th class="head">marker</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>‘o’</td>
-<td>circle</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="color">
-<h3>Color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h3>
-<p>The color can be specified via a character code,
-a full name or a HEX code.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If a formatting string contains more parameters than just the color,
-only the character code is supported.</p>
-</div>
-<div class="section" id="character-code">
-<h4>Character code<a class="headerlink" href="#character-code" title="Permalink to this headline">¶</a></h4>
-<table border="1" class="docutils">
-<colgroup>
-<col width="60%" />
-<col width="40%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">character</th>
-<th class="head">color</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>‘r’</td>
-<td>red</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="full-name">
-<h4>Full name<a class="headerlink" href="#full-name" title="Permalink to this headline">¶</a></h4>
-<p>E.g. seagreen</p>
-</div>
-<div class="section" id="hex-code">
-<h4>HEX code<a class="headerlink" href="#hex-code" title="Permalink to this headline">¶</a></h4>
-<p>Just use HEX</p>
+<p>The function can then be accessed via:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">matplotlibcpp</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">loglog</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>          <span class="c1">// if we defined namespace plt = matplotlibcpp</span>
+</pre></div>
 </div>
 </div>
-<div class="section" id="line">
-<h3>Line<a class="headerlink" href="#line" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
-<colgroup>
-<col width="60%" />
-<col width="40%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">character</th>
-<th class="head">line</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>‘-‘</td>
-<td>solid</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section" id="the-vector-type">
-<h2>The <cite>Vector</cite> type<a class="headerlink" href="#the-vector-type" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vector-type">
+<h2><cite>Vector</cite> type<a class="headerlink" href="#vector-type" title="Permalink to this headline">¶</a></h2>
 <dl class="type">
 <dt id="_CPPv46Vector">
 <span id="_CPPv36Vector"></span><span id="_CPPv26Vector"></span><span id="Vector"></span><em class="property">type </em><code class="descname">Vector</code><a class="headerlink" href="#_CPPv46Vector" title="Permalink to this definition">¶</a><br /></dt>
@@ -359,9 +238,9 @@ The data must furthermore be stored in a consecutive manner.</p>
 <div class="section" id="plot-commands">
 <h2>Plot commands<a class="headerlink" href="#plot-commands" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I00E4plotRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00E4plotRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">plot</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I00EN13matplotlibcpp4plotERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00EN13matplotlibcpp4plotERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">plot</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> versus <cite>x</cite>.</p>
 <p>The two vectors <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> must have the same length.
 The formatting string <cite>s</cite> can specify the colour, markers and style of the
@@ -373,15 +252,15 @@ The map <cite>keywords</cite> may contain additional named arguments for the plo
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Template Parameters:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><strong>VectorX</strong> – vector-like type, see <a class="reference internal" href="#_CPPv46Vector" title="Vector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></a></li>
-<li><strong>VectorY</strong> – vector-like type, see <a class="reference internal" href="#_CPPv46Vector" title="Vector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></a></li>
+<li><strong>VectorX</strong> – vector-like type, see <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></li>
+<li><strong>VectorY</strong> – vector-like type, see <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>x</strong> – <span class="math notranslate nohighlight">\(x\)</span> data for the plot</li>
 <li><strong>y</strong> – <span class="math notranslate nohighlight">\(y\)</span> data for the plot</li>
-<li><strong>s</strong> – (optional) formatting string, see <a class="reference internal" href="#style"><span class="std std-ref">here</span></a></li>
+<li><strong>s</strong> – (optional) formatting string, see <a class="reference internal" href="style.html#style"><span class="std std-ref">here</span></a></li>
 <li><strong>keywords</strong> – (optional) map specifying additional keywords, see <a class="reference external" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html">here</a></li>
 </ul>
 </td>
@@ -426,9 +305,9 @@ The map <cite>keywords</cite> may contain additional named arguments for the plo
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E4plotbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I0E4plotRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0E4plotRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">plot</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E4plotbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>format</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E4plotbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp4plotEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I0EN13matplotlibcpp4plotERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0EN13matplotlibcpp4plotERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">plot</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4plotEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>format</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp4plotEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite>.</p>
 <p>For a vector <span class="math notranslate nohighlight">\(y\)</span> of size <span class="math notranslate nohighlight">\(n\)</span>, the <span class="math notranslate nohighlight">\(x\)</span> data
 is set to <span class="math notranslate nohighlight">\({0, ..., n - 1}\)</span>.
@@ -440,12 +319,12 @@ The map <cite>keywords</cite> may contain additional named arguments for the plo
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Template Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first"><strong>VectorY</strong> – vector-like type, see <a class="reference internal" href="#_CPPv46Vector" title="Vector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first"><strong>VectorY</strong> – vector-like type, see <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>y</strong> – <span class="math notranslate nohighlight">\(y\)</span> data for the plot</li>
-<li><strong>s</strong> – (optional) formatting string, see <a class="reference internal" href="#style"><span class="std std-ref">here</span></a></li>
+<li><strong>s</strong> – (optional) formatting string, see <a class="reference internal" href="style.html#style"><span class="std std-ref">here</span></a></li>
 <li><strong>keywords</strong> – (optional) map specifying additional keywords, see <a class="reference external" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html">here</a></li>
 </ul>
 </td>
@@ -478,11 +357,11 @@ The map <cite>keywords</cite> may contain additional named arguments for the plo
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I00E6loglogbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I00E6loglogRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00E6loglogRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">loglog</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E6loglogbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="loglog::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E6loglogbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="loglog::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00E6loglogbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.loglog.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I00EN13matplotlibcpp6loglogEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I00EN13matplotlibcpp6loglogERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00EN13matplotlibcpp6loglogERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">loglog</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp6loglogEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::loglog::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp6loglogEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::loglog::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN13matplotlibcpp6loglogEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.loglog.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> versus <cite>x</cite> in double logarithmic scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will be in double logarithmic scale,
@@ -515,11 +394,11 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E6loglogbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I0E6loglogRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0E6loglogRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">loglog</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E6loglogbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="loglog::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E6loglogbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.loglog.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp6loglogEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I0EN13matplotlibcpp6loglogERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0EN13matplotlibcpp6loglogERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">loglog</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6loglogEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::loglog::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp6loglogEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.loglog.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> in double logarithmic scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will be in double logarithmic scale,
@@ -541,11 +420,11 @@ definition <code class="docutils literal notranslate"><span class="pre">plt</spa
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I00E8semilogxbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I00E8semilogxRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00E8semilogxRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogx</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E8semilogxbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogx::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E8semilogxbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogx::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00E8semilogxbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogx.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I00EN13matplotlibcpp8semilogxEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I00EN13matplotlibcpp8semilogxERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00EN13matplotlibcpp8semilogxERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogx</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp8semilogxEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogx::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp8semilogxEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogx::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN13matplotlibcpp8semilogxEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogx.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> versus <cite>x</cite> in logarithmic <cite>x</cite> and linear <cite>y</cite> scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will inherit the logarithmic <cite>x</cite> scale,
@@ -554,11 +433,11 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E8semilogxbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I0E8semilogxRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0E8semilogxRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogx</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E8semilogxbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogx::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E8semilogxbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogx.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp8semilogxEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I0EN13matplotlibcpp8semilogxERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0EN13matplotlibcpp8semilogxERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogx</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp8semilogxEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogx::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp8semilogxEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogx.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> in logarithmic <cite>x</cite> and linear <cite>y</cite> scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will inherit the logarithmic <cite>x</cite> scale,
@@ -567,11 +446,11 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I00E8semilogybRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I00E8semilogyRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00E8semilogyRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogy</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E8semilogybRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogy::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E8semilogybRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogy::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00E8semilogybRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogy.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I00EN13matplotlibcpp8semilogyEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I00EN13matplotlibcpp8semilogyERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I00EN13matplotlibcpp8semilogyERK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorX</code>, typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogy</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp8semilogyEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogy::VectorX">VectorX</a> &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp8semilogyEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogy::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN13matplotlibcpp8semilogyEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogy.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> versus <cite>x</cite> in linear <cite>x</cite>  and logarithmic <cite>y</cite> scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will inherit the logarithmic <cite>y</cite> scale,
@@ -580,11 +459,11 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E8semilogybRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv3I0E8semilogyRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0E8semilogyRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogy</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E8semilogybRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="semilogy::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E8semilogybRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogy.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp8semilogyEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3I0EN13matplotlibcpp8semilogyERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2I0EN13matplotlibcpp8semilogyERK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span>template&lt;typename <code class="descname">VectorY</code>&gt;<br />bool <code class="descname">semilogy</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp8semilogyEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::semilogy::VectorY">VectorY</a> &amp;<em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp8semilogyEbRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.semilogy.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Plot <cite>y</cite> in linear <cite>x</cite> and logarithmic <cite>y</cite> scale.</p>
-<p>See <a class="reference internal" href="#_CPPv4I00E4plotbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
+<p>See <a class="reference internal" href="#_CPPv4I00EN13matplotlibcpp4plotEbRK7VectorXRK7VectorYRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="matplotlibcpp::plot"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">plot()</span></code></a> for explanation of the parameters.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">All following plots will inherit the logarithmic <cite>y</cite> scale,
@@ -593,9 +472,9 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E4textv7Numeric7NumericRKNSt6stringE">
-<span id="_CPPv3I0E4text7Numeric7NumericRKNSt6stringE"></span><span id="_CPPv2I0E4text7Numeric7NumericRKNSt6stringE"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">text</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0E4textv7Numeric7NumericRKNSt6stringE" title="text::Numeric">Numeric</a> <em>x</em>, <a class="reference internal" href="#_CPPv4I0E4textv7Numeric7NumericRKNSt6stringE" title="text::Numeric">Numeric</a> <em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E4textv7Numeric7NumericRKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.text.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp4textEv7Numeric7NumericRKNSt6stringE">
+<span id="_CPPv3I0EN13matplotlibcpp4textE7Numeric7NumericRKNSt6stringE"></span><span id="_CPPv2I0EN13matplotlibcpp4textE7Numeric7NumericRKNSt6stringE"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">text</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4textEv7Numeric7NumericRKNSt6stringE" title="matplotlibcpp::text::Numeric">Numeric</a> <em>x</em>, <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4textEv7Numeric7NumericRKNSt6stringE" title="matplotlibcpp::text::Numeric">Numeric</a> <em>y</em>, <em class="property">const</em> std::string &amp;<em>s</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp4textEv7Numeric7NumericRKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.text.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Place text at location <span class="math notranslate nohighlight">\((x,y)\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -636,9 +515,9 @@ also calls to <cite>plot</cite>.</p>
 <div class="section" id="figure-commands">
 <span id="layout"></span><h2>Figure commands<a class="headerlink" href="#figure-commands" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="_CPPv46figurel">
-<span id="_CPPv36figurel"></span><span id="_CPPv26figurel"></span><span id="figure__l"></span><em class="property">inline</em> long <code class="descname">figure</code><span class="sig-paren">(</span>long <em>number</em> = -1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46figurel" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.figure.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4N13matplotlibcpp6figureEl">
+<span id="_CPPv3N13matplotlibcpp6figureEl"></span><span id="_CPPv2N13matplotlibcpp6figureEl"></span><span id="matplotlibcpp::figure__l"></span><em class="property">inline</em> long <code class="descname">figure</code><span class="sig-paren">(</span>long <em>number</em> = -1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp6figureEl" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.figure.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Initialise a new figure with the ID <cite>number</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -654,8 +533,8 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv413fignum_existsl">
-<span id="_CPPv313fignum_existsl"></span><span id="_CPPv213fignum_existsl"></span><span id="fignum_exists__l"></span><em class="property">inline</em> bool <code class="descname">fignum_exists</code><span class="sig-paren">(</span>long <em>number</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fignum_existsl" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N13matplotlibcpp13fignum_existsEl">
+<span id="_CPPv3N13matplotlibcpp13fignum_existsEl"></span><span id="_CPPv2N13matplotlibcpp13fignum_existsEl"></span><span id="matplotlibcpp::fignum_exists__l"></span><em class="property">inline</em> bool <code class="descname">fignum_exists</code><span class="sig-paren">(</span>long <em>number</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp13fignum_existsEl" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Check if a figure of given number exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -670,8 +549,8 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv411figure_size6size_t6size_t">
-<span id="_CPPv311figure_size6size_t6size_t"></span><span id="_CPPv211figure_size6size_t6size_t"></span><span id="figure_size__s.s"></span><em class="property">inline</em> void <code class="descname">figure_size</code><span class="sig-paren">(</span>size_t <em>w</em>, size_t <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411figure_size6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N13matplotlibcpp11figure_sizeE6size_t6size_t">
+<span id="_CPPv3N13matplotlibcpp11figure_sizeE6size_t6size_t"></span><span id="_CPPv2N13matplotlibcpp11figure_sizeE6size_t6size_t"></span><span id="matplotlibcpp::figure_size__s.s"></span><em class="property">inline</em> void <code class="descname">figure_size</code><span class="sig-paren">(</span>size_t <em>w</em>, size_t <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp11figure_sizeE6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set the figure size to <cite>w</cite> x <cite>h</cite> inches.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -688,16 +567,16 @@ also calls to <cite>plot</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E6legendvRKNSt6stringERK6Vector">
-<span id="_CPPv3I0E6legendRKNSt6stringERK6Vector"></span><span id="_CPPv2I0E6legendRKNSt6stringERK6Vector"></span>template&lt;typename <code class="descname">Vector</code> = std::vector&lt;double&gt;&gt;<br /><em class="property">inline</em> void <code class="descname">legend</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>loc</em> = &quot;best&quot;, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E6legendvRKNSt6stringERK6Vector" title="legend::Vector">Vector</a> &amp;<em>bbox_to_anchor</em> = <a class="reference internal" href="#_CPPv4I0E6legendvRKNSt6stringERK6Vector" title="legend::Vector">Vector</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E6legendvRKNSt6stringERK6Vector" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.legend.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector">
+<span id="_CPPv3I0EN13matplotlibcpp6legendERKNSt6stringERK6Vector"></span><span id="_CPPv2I0EN13matplotlibcpp6legendERKNSt6stringERK6Vector"></span>template&lt;typename <code class="descname">Vector</code> = std::vector&lt;double&gt;&gt;<br /><em class="property">inline</em> void <code class="descname">legend</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>loc</em> = &quot;best&quot;, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="matplotlibcpp::legend::Vector">Vector</a> &amp;<em>bbox_to_anchor</em> = <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="matplotlibcpp::legend::Vector">Vector</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.legend.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Set the figure legend.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Template Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first"><strong>Vector</strong> – vector-like type, see <a class="reference internal" href="#_CPPv4I0E6legendvRKNSt6stringERK6Vector" title="legend::Vector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></a>, defaults
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first"><strong>Vector</strong> – vector-like type, see <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="matplotlibcpp::legend::Vector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Vector</span></code></a>, defaults
 to <cite>std::vector&lt;double&gt;</cite></p>
 </td>
 </tr>
@@ -727,9 +606,9 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E4xlimv7Numeric7Numeric">
-<span id="_CPPv3I0E4xlim7Numeric7Numeric"></span><span id="_CPPv2I0E4xlim7Numeric7Numeric"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">xlim</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0E4xlimv7Numeric7Numeric" title="xlim::Numeric">Numeric</a> <em>left</em>, <a class="reference internal" href="#_CPPv4I0E4xlimv7Numeric7Numeric" title="xlim::Numeric">Numeric</a> <em>right</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E4xlimv7Numeric7Numeric" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp4xlimEv7Numeric7Numeric">
+<span id="_CPPv3I0EN13matplotlibcpp4xlimE7Numeric7Numeric"></span><span id="_CPPv2I0EN13matplotlibcpp4xlimE7Numeric7Numeric"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">xlim</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4xlimEv7Numeric7Numeric" title="matplotlibcpp::xlim::Numeric">Numeric</a> <em>left</em>, <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4xlimEv7Numeric7Numeric" title="matplotlibcpp::xlim::Numeric">Numeric</a> <em>right</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp4xlimEv7Numeric7Numeric" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Set the <cite>x</cite> axis limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -750,9 +629,9 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv4I0E4ylimv7Numeric7Numeric">
-<span id="_CPPv3I0E4ylim7Numeric7Numeric"></span><span id="_CPPv2I0E4ylim7Numeric7Numeric"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">ylim</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0E4ylimv7Numeric7Numeric" title="ylim::Numeric">Numeric</a> <em>bottom</em>, <a class="reference internal" href="#_CPPv4I0E4ylimv7Numeric7Numeric" title="ylim::Numeric">Numeric</a> <em>top</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0E4ylimv7Numeric7Numeric" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ylim.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4I0EN13matplotlibcpp4ylimEv7Numeric7Numeric">
+<span id="_CPPv3I0EN13matplotlibcpp4ylimE7Numeric7Numeric"></span><span id="_CPPv2I0EN13matplotlibcpp4ylimE7Numeric7Numeric"></span>template&lt;typename <code class="descname">Numeric</code>&gt;<br />void <code class="descname">ylim</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4ylimEv7Numeric7Numeric" title="matplotlibcpp::ylim::Numeric">Numeric</a> <em>bottom</em>, <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp4ylimEv7Numeric7Numeric" title="matplotlibcpp::ylim::Numeric">Numeric</a> <em>top</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp4ylimEv7Numeric7Numeric" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ylim.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Set the <cite>y</cite> axis limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -773,8 +652,8 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv44xlimv">
-<span id="_CPPv34xlimv"></span><span id="_CPPv24xlimv"></span><span id="xlim"></span><em class="property">inline</em> double *<code class="descname">xlim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44xlimv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N13matplotlibcpp4xlimEv">
+<span id="_CPPv3N13matplotlibcpp4xlimEv"></span><span id="_CPPv2N13matplotlibcpp4xlimEv"></span><span id="matplotlibcpp::xlim"></span><em class="property">inline</em> double *<code class="descname">xlim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp4xlimEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the <cite>x</cite> axis limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -787,8 +666,8 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv44ylimv">
-<span id="_CPPv34ylimv"></span><span id="_CPPv24ylimv"></span><span id="ylim"></span><em class="property">inline</em> double *<code class="descname">ylim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44ylimv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N13matplotlibcpp4ylimEv">
+<span id="_CPPv3N13matplotlibcpp4ylimEv"></span><span id="_CPPv2N13matplotlibcpp4ylimEv"></span><span id="matplotlibcpp::ylim"></span><em class="property">inline</em> double *<code class="descname">ylim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp4ylimEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the <cite>y</cite> axis limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -801,9 +680,9 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv45titleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv35titleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv25titleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="title__ssCR.std::map:ss.ss:CR"></span><em class="property">inline</em> void <code class="descname">title</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>titlestr</em>, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45titleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.title.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4N13matplotlibcpp5titleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3N13matplotlibcpp5titleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2N13matplotlibcpp5titleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="matplotlibcpp::title__ssCR.std::map:ss.ss:CR"></span><em class="property">inline</em> void <code class="descname">title</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>titlestr</em>, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp5titleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.title.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Set the title of the plot.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -820,9 +699,9 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv48suptitleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
-<span id="_CPPv38suptitleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv28suptitleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="suptitle__ssCR.std::map:ss.ss:CR"></span><em class="property">inline</em> void <code class="descname">suptitle</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>suptitlestr</em>, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48suptitleRKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.suptitle.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4N13matplotlibcpp8suptitleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3N13matplotlibcpp8suptitleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2N13matplotlibcpp8suptitleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="matplotlibcpp::suptitle__ssCR.std::map:ss.ss:CR"></span><em class="property">inline</em> void <code class="descname">suptitle</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>suptitlestr</em>, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp8suptitleERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.suptitle.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Add a centered title to the figure.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -839,9 +718,9 @@ plot axes (thus no normalised coordinates)</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv44axisRKNSt6stringE">
-<span id="_CPPv34axisRKNSt6stringE"></span><span id="_CPPv24axisRKNSt6stringE"></span><span id="axis__ssCR"></span><em class="property">inline</em> void <code class="descname">axis</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>option</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44axisRKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.suptitle.html"><img alt="_images/matplotlib_icon.png" class="align-right" src="_images/matplotlib_icon.png" style="width: 20px; height: 20px;" /></a>
+<dt id="_CPPv4N13matplotlibcpp4axisERKNSt6stringE">
+<span id="_CPPv3N13matplotlibcpp4axisERKNSt6stringE"></span><span id="_CPPv2N13matplotlibcpp4axisERKNSt6stringE"></span><span id="matplotlibcpp::axis__ssCR"></span><em class="property">inline</em> void <code class="descname">axis</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>option</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp4axisERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.suptitle.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
 <p>Set some axis properties.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -901,7 +780,7 @@ plot axes (thus no normalised coordinates)</dd>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="style.html" class="btn btn-neutral float-right" title="The style of a line" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="compiling.html" class="btn btn-neutral float-left" title="Compiling a program" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
