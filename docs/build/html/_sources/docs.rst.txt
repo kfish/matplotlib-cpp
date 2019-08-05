@@ -413,11 +413,19 @@ Figure commands
     Initialise a new figure with the ID `number`.
 
     :param number: The number of the figure. If set to `-1` default numbering
-                   (increasing from `0` on) is used.
-    :return: The number of the figure.
+                   (increasing from `0` on) is used
+    :return: The number of the figure
+
+.. _mpl_fignum_exists: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.fignum_exists.html
 
 .. cpp:function::
       inline bool fignum_exists(long number)
+
+    .. image:: ../img/matplotlib_icon.png
+       :align: right
+       :width: 20px
+       :height: 20px
+       :target: mpl_fignum_exists_
 
     Check if a figure of given number exists.
 
@@ -427,11 +435,10 @@ Figure commands
 .. cpp:function::
       inline void figure_size(size_t w, size_t h)
 
-    Set the figure size to `w` x `h` inches.
+    Call `plt::figure()` and set the figure size to `w` x `h` pixels.
 
-    :param w: The width of the figure in inches
-    :param h: The height of the figure in inches
-
+    :param w: The width of the figure in pixels
+    :param h: The height of the figure in pixels
 
 .. _mpl_legend: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.legend.html
 
@@ -446,25 +453,28 @@ Figure commands
        :height: 20px
        :target: mpl_legend_
 
-    Set the figure legend.
+    Enable the figure legend.
 
     :tparam Vector: vector-like type, see :cpp:type:`Vector`, defaults
                 to `std::vector<double>`
     :param loc: The location of the legend. May be any of:
                 "best", "upper left", "upper center", "upper left",
-                "center left", "center", "center right" (== "right"),
+                "center left", "center", "center right" (= "right"),
                 "lower left", "lower center", "lower right"
-    :param bbox_to_anchor: If set to a vector of length 2 or 4 it
+    :param bbox_to_anchor:
+               If set to a vector of length 2 or 4 it
                specifies the location (and size) of the legend's bounding box.
                Format is (`x`, `y`) or (`x`, `y`, `width`, `height`).
                The coordinates are interpreted in the same units as the
                plot axes (thus no normalised coordinates)
 
-     .. code-block:: cpp
+    **Example**
 
-        // Put the legend in the center of the bottom right quadrant.
-        // First argument: loc, second: bbox_to_anchor
-        plt::legend("center", {0.5, 0, 0.5, 0.5});
+    .. code-block:: cpp
+
+      // Put the legend in the center of the bottom right quadrant.
+      // First argument: loc, second: bbox_to_anchor
+      plt::legend("center", {0.5, 0, 0.5, 0.5});
 
 
 .. _mpl_xlim: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html
@@ -581,3 +591,83 @@ Figure commands
    `image`	  `scaled` with axis limits equal to data limits.
    `square`	Square plot; similar to `scaled`, but initially forcing same x- and y-axis length.
    ========= ================================================
+
+.. _mpl_savefig: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html
+
+.. cpp:function::
+      inline void savefig(const std::string &filename, \
+                          const std::map<std::string, std::string> &keywords = {})
+
+   .. image:: ../img/matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_savefig_
+
+   Save the current figure.
+
+   Supported file types depend on the user backend, but usually
+   contain `pdf`, `eps` and `png`. To find all supported formats try
+
+   .. code-block:: bash
+
+     $ python3
+     >>> import matplotlib.pyplot as plt
+     >>> plt.gcf().canvas.get_supported_filetypes_grouped()
+
+   :param filename: Save the figure to `filename` (must contain file format)
+   :param keywords: Additional keywords, see `Other Parameters` `here <mpl_savefig>`_ for a complete list
+
+   **Examples**
+
+   .. code-block:: cpp
+
+    plt::plot(x, y);
+    plt::savefig("plot.pdf");
+
+   Always the current state of the figure is stored.
+
+   .. code-block:: cpp
+
+     plt::plot(time, apple_sales);
+     plt::savefig("sales.pdf");  // contains only apple_sales
+     plt::plot(time, kiwi_sales);
+     plt::savefig("sales.pdf");  // contains apple and kiwi sales
+
+   Calling `plt::show()` clears the plot!
+
+   .. code-block:: cpp
+
+     plt::plot(x, y);
+     plt::show();
+     plt::savefig("is_this_empty.pdf");  // yes, this will be empty
+
+     plt::plot(x, y);
+     plt::savefig("this_isnt_empty.pdf");  // always call savefig *before* show
+     plt::show();
+
+   Optimally use the available canvas space with `{{"bbox_inches", "tight"}}`.
+   This can be useful if e.g. the axis labels are too far outside and get cut off.
+
+   .. code-block:: cpp
+
+     plt::savefig("fig.pdf", {{"bbox_inches", "tight"}});
+
+
+.. _mpl_show: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.show.html
+
+.. cpp:function::
+      inline void show(const bool block = true)
+
+   .. image:: ../img/matplotlib_icon.png
+      :align: right
+      :width: 20px
+      :height: 20px
+      :target: mpl_show_
+
+   Display the figure.
+
+   :param block: If true, the execution of the code is stopped until the
+                 displayed figure is closed. Otherwise the code is not stopped.
+                 Depending on the backend, figures might not get displayed
+                 at all.

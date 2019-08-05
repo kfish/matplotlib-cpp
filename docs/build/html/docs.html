@@ -83,6 +83,7 @@
             
               <p class="caption"><span class="caption-text">Content</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="examples.html">First examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiling.html">Compiling a program</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#matplotlibcpp-namespace"><cite>matplotlibcpp</cite> namespace</a></li>
@@ -92,6 +93,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="style.html">The style of a line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">Frequent problems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html#questions">Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="todo.html">To do</a></li>
@@ -524,9 +526,9 @@ also calls to <cite>plot</cite>.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> – The number of the figure. If set to <cite>-1</cite> default numbering
-(increasing from <cite>0</cite> on) is used.</td>
+(increasing from <cite>0</cite> on) is used</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of the figure.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of the figure</td>
 </tr>
 </tbody>
 </table>
@@ -535,7 +537,8 @@ also calls to <cite>plot</cite>.</p>
 <dl class="function">
 <dt id="_CPPv4N13matplotlibcpp13fignum_existsEl">
 <span id="_CPPv3N13matplotlibcpp13fignum_existsEl"></span><span id="_CPPv2N13matplotlibcpp13fignum_existsEl"></span><span id="matplotlibcpp::fignum_exists__l"></span><em class="property">inline</em> bool <code class="descname">fignum_exists</code><span class="sig-paren">(</span>long <em>number</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp13fignum_existsEl" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Check if a figure of given number exists.</p>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.fignum_exists.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
+<p>Check if a figure of given number exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -551,14 +554,14 @@ also calls to <cite>plot</cite>.</p>
 <dl class="function">
 <dt id="_CPPv4N13matplotlibcpp11figure_sizeE6size_t6size_t">
 <span id="_CPPv3N13matplotlibcpp11figure_sizeE6size_t6size_t"></span><span id="_CPPv2N13matplotlibcpp11figure_sizeE6size_t6size_t"></span><span id="matplotlibcpp::figure_size__s.s"></span><em class="property">inline</em> void <code class="descname">figure_size</code><span class="sig-paren">(</span>size_t <em>w</em>, size_t <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp11figure_sizeE6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Set the figure size to <cite>w</cite> x <cite>h</cite> inches.</p>
+<dd><p>Call <cite>plt::figure()</cite> and set the figure size to <cite>w</cite> x <cite>h</cite> pixels.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>w</strong> – The width of the figure in inches</li>
-<li><strong>h</strong> – The height of the figure in inches</li>
+<li><strong>w</strong> – The width of the figure in pixels</li>
+<li><strong>h</strong> – The height of the figure in pixels</li>
 </ul>
 </td>
 </tr>
@@ -570,7 +573,7 @@ also calls to <cite>plot</cite>.</p>
 <dt id="_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector">
 <span id="_CPPv3I0EN13matplotlibcpp6legendERKNSt6stringERK6Vector"></span><span id="_CPPv2I0EN13matplotlibcpp6legendERKNSt6stringERK6Vector"></span>template&lt;typename <code class="descname">Vector</code> = std::vector&lt;double&gt;&gt;<br /><em class="property">inline</em> void <code class="descname">legend</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>loc</em> = &quot;best&quot;, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="matplotlibcpp::legend::Vector">Vector</a> &amp;<em>bbox_to_anchor</em> = <a class="reference internal" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="matplotlibcpp::legend::Vector">Vector</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN13matplotlibcpp6legendEvRKNSt6stringERK6Vector" title="Permalink to this definition">¶</a><br /></dt>
 <dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.legend.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
-<p>Set the figure legend.</p>
+<p>Enable the figure legend.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -583,26 +586,24 @@ to <cite>std::vector&lt;double&gt;</cite></p>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>loc</strong> – The location of the legend. May be any of:
 “best”, “upper left”, “upper center”, “upper left”,
-“center left”, “center”, “center right” (== “right”),
+“center left”, “center”, “center right” (= “right”),
 “lower left”, “lower center”, “lower right”</li>
-<li><strong>bbox_to_anchor</strong> – <dl class="docutils">
-<dt>If set to a vector of length 2 or 4 it</dt>
-<dd>specifies the location (and size) of the legend’s bounding box.
+<li><strong>bbox_to_anchor</strong> – If set to a vector of length 2 or 4 it
+specifies the location (and size) of the legend’s bounding box.
 Format is (<cite>x</cite>, <cite>y</cite>) or (<cite>x</cite>, <cite>y</cite>, <cite>width</cite>, <cite>height</cite>).
 The coordinates are interpreted in the same units as the
-plot axes (thus no normalised coordinates)</dd>
-</dl>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Put the legend in the center of the bottom right quadrant.</span>
-<span class="c1">// First argument: loc, second: bbox_to_anchor</span>
-<span class="n">plt</span><span class="o">::</span><span class="n">legend</span><span class="p">(</span><span class="s">&quot;center&quot;</span><span class="p">,</span> <span class="p">{</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">});</span>
-</pre></div>
-</div>
-</li>
+plot axes (thus no normalised coordinates)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<p><strong>Example</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Put the legend in the center of the bottom right quadrant.</span>
+<span class="c1">// First argument: loc, second: bbox_to_anchor</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">legend</span><span class="p">(</span><span class="s">&quot;center&quot;</span><span class="p">,</span> <span class="p">{</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">});</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -764,6 +765,77 @@ plot axes (thus no normalised coordinates)</dd>
 </tr>
 <tr class="row-odd"><td><cite>square</cite></td>
 <td>Square plot; similar to <cite>scaled</cite>, but initially forcing same x- and y-axis length.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N13matplotlibcpp7savefigERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE">
+<span id="_CPPv3N13matplotlibcpp7savefigERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="_CPPv2N13matplotlibcpp7savefigERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE"></span><span id="matplotlibcpp::savefig__ssCR.std::map:ss.ss:CR"></span><em class="property">inline</em> void <code class="descname">savefig</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>filename</em>, <em class="property">const</em> std::map&lt;std::string, std::string&gt; &amp;<em>keywords</em> = {}<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp7savefigERKNSt6stringERKNSt3mapINSt6stringENSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
+<p>Save the current figure.</p>
+<p>Supported file types depend on the user backend, but usually
+contain <cite>pdf</cite>, <cite>eps</cite> and <cite>png</cite>. To find all supported formats try</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3
+&gt;&gt;&gt; import matplotlib.pyplot as plt
+&gt;&gt;&gt; plt.gcf<span class="o">()</span>.canvas.get_supported_filetypes_grouped<span class="o">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> – Save the figure to <cite>filename</cite> (must contain file format)</li>
+<li><strong>keywords</strong> – Additional keywords, see <cite>Other Parameters</cite> <a class="reference external" href="mpl_savefig">here</a> for a complete list</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;plot.pdf&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Always the current state of the figure is stored.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">apple_sales</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;sales.pdf&quot;</span><span class="p">);</span>  <span class="c1">// contains only apple_sales</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">kiwi_sales</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;sales.pdf&quot;</span><span class="p">);</span>  <span class="c1">// contains apple and kiwi sales</span>
+</pre></div>
+</div>
+<p>Calling <cite>plt::show()</cite> clears the plot!</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">show</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;is_this_empty.pdf&quot;</span><span class="p">);</span>  <span class="c1">// yes, this will be empty</span>
+
+<span class="n">plt</span><span class="o">::</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;this_isnt_empty.pdf&quot;</span><span class="p">);</span>  <span class="c1">// always call savefig *before* show</span>
+<span class="n">plt</span><span class="o">::</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Optimally use the available canvas space with <cite>{{“bbox_inches”, “tight”}}</cite>.
+This can be useful if e.g. the axis labels are too far outside and get cut off.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">::</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;fig.pdf&quot;</span><span class="p">,</span> <span class="p">{{</span><span class="s">&quot;bbox_inches&quot;</span><span class="p">,</span> <span class="s">&quot;tight&quot;</span><span class="p">}});</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N13matplotlibcpp4showEKb">
+<span id="_CPPv3N13matplotlibcpp4showEKb"></span><span id="_CPPv2N13matplotlibcpp4showEKb"></span><span id="matplotlibcpp::show__bC"></span><em class="property">inline</em> void <code class="descname">show</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>block</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13matplotlibcpp4showEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><a class="reference external image-reference" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.show.html"><img alt="_images/matplotlib_icon1.png" class="align-right" src="_images/matplotlib_icon1.png" style="width: 20px; height: 20px;" /></a>
+<p>Display the figure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>block</strong> – If true, the execution of the code is stopped until the
+displayed figure is closed. Otherwise the code is not stopped.
+Depending on the backend, figures might not get displayed
+at all.</td>
 </tr>
 </tbody>
 </table>

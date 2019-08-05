@@ -61,6 +61,12 @@ Style of a line
 
 Refer :ref:`style` to tune the appearance of the lines you plot.
 
+Frequent problems
++++++++++++++++++
+
+:ref:`problems` lists typical problems with Matplotlib for C++
+and (hopefully) how to resolve them.
+
 .. tip::
 
   Criticism (preferably constructive), ideas and contributions
