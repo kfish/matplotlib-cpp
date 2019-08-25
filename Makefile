@@ -16,65 +16,42 @@ definitions = -std=c++11
 # Eigen include
 eigen_include = -I /usr/local/include/eigen3
 
-examples: minimal basic modern animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
+# Executable names for examples (w/o Eigen)
+example_execs = minimal basic animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
 
-eigen: eigen_basic eigen_modern eigen_loglog eigen_semilogx eigen_semilogy
+# Executable names for examples using Eigen
+eigen_execs = eigen loglog semilogx semilogy small
 
-minimal: examples/minimal.cpp matplotlibcpp.h
-	cd examples && g++ -DWITHOUT_NUMPY minimal.cpp ${includes} ${linkings} -o minimal ${definitions}
-	#cd examples && g++ minimal.cpp ${includes} ${linkings} -o minimal ${definitions}
+# Example targets (default if just 'make' is called)
+examples: $(example_execs)
 
-basic: examples/basic.cpp matplotlibcpp.h
-	cd examples && g++ basic.cpp ${includes} ${linkings} -o basic ${definitions}
+# Eigen example targets
+eigen: $(eigen_execs)
 
-modern: examples/modern.cpp matplotlibcpp.h
-	cd examples && g++ modern.cpp ${includes} ${linkings} -o modern ${definitions}
+# All examples
+all: examples eigen
 
-animation: examples/animation.cpp matplotlibcpp.h
-	cd examples && g++ animation.cpp ${includes} ${linkings} -o animation ${definitions}
+# Run all examples
+run: run_examples run_eigen
 
-nonblock: examples/nonblock.cpp matplotlibcpp.h
-	cd examples && g++ nonblock.cpp ${includes} ${linkings} -o nonblock ${definitions}
+# Compiler instructions for examples
+$(example_execs): %: examples/%.cpp matplotlibcpp.h
+	g++ $< $(includes) $(linkings) -o examples/$@ $(definitions)
 
-quiver: examples/quiver.cpp matplotlibcpp.h
-	cd examples && g++ quiver.cpp ${includes} ${linkings} -o quiver ${definitions}
+# Run examples
+run_examples:
+	for exec in $(example_execs); do ./examples/$$exec; done
 
-xkcd: examples/xkcd.cpp matplotlibcpp.h
-	cd examples && g++ xkcd.cpp ${includes} ${linkings} -o xkcd ${definitions}
+# Compiler instructions for Eigen examples
+$(eigen_execs): %: examples/%.cpp matplotlibcpp.h
+	g++ $< $(includes) $(eigen_include) $(linkings) -o examples/$@ $(definitions)
 
-bar: examples/bar.cpp matplotlibcpp.h
-	cd examples && g++ bar.cpp ${includes} ${linkings} -o bar ${definitions}
+# Run Eigen examples
+run_eigen:
+	for exec in $(eigen_execs); do ./examples/$$exec; done
 
-surface: examples/surface.cpp matplotlibcpp.h
-	cd examples && g++ surface.cpp ${includes} ${linkings} -o surface ${definitions}
-
-subplot: examples/subplot.cpp matplotlibcpp.h
-	cd examples && g++ subplot.cpp ${includes} ${linkings} -o subplot ${definitions}
-
-fill_inbetween: examples/fill_inbetween.cpp matplotlibcpp.h
-	cd examples && g++ fill_inbetween.cpp ${includes} ${linkings} -o fill_inbetween ${definitions}
-
-fill: examples/fill.cpp matplotlibcpp.h
-	cd examples && g++ fill.cpp ${includes} ${linkings} -o fill ${definitions}
-
-update: examples/update.cpp matplotlibcpp.h
-	cd examples && g++ update.cpp ${includes} ${linkings} -o update ${definitions}
-
-eigen_basic: examples/eigen/basic.cpp matplotlibcpp.h
-	cd examples/eigen && g++ basic.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
-
-eigen_modern: examples/eigen/modern.cpp matplotlibcpp.h
-	cd examples/eigen && g++ modern.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
-
-eigen_loglog: examples/eigen/loglog.cpp matplotlibcpp.h
-	cd examples/eigen && g++ loglog.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
-
-eigen_semilogx: examples/eigen/semilogx.cpp matplotlibcpp.h
-	cd examples/eigen && g++ semilogx.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
-
-eigen_semilogy: examples/eigen/semilogy.cpp matplotlibcpp.h
-	cd examples/eigen && g++ semilogy.cpp ${includes} ${eigen_include} ${linkings} -o $@ ${definitions}
-
+# Clean all
 clean:
-	rm -f examples/{minimal,basic,modern,animation,nonblock,xkcd,quiver,bar,surface,subplot,fill_inbetween,fill,update}
-	rm -f examples/eigen/{eigen_basic,eigen_modern,eigen_loglog}
+	# -f to silent warnings if file does not exist
+	for exec in $(example_execs); do rm -f examples/$$exec; done
+	for exec in $(eigen_execs); do rm -f examples/$$exec; done

@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "../../matplotlibcpp.h"
+#include "../matplotlibcpp.h"
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
@@ -38,8 +38,8 @@ int main() {
   plt::legend();
 
   // save figure
-  const char *filename = "./basic.png";
+  const char *filename = "./eigen_basic.png";
   std::cout << "Saving result to " << filename << std::endl;
 
-  plt::save(filename);
+  plt::savefig(filename);
 }

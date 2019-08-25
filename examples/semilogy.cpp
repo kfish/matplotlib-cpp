@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "../../matplotlibcpp.h"
+#include "../matplotlibcpp.h"
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>

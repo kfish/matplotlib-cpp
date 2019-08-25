@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // for sin/log
 #include "../matplotlibcpp.h"
 #include <cmath>
 #include <iostream>
@@ -6,8 +6,7 @@
 namespace plt = matplotlibcpp;
 
 int main() {
-  // Prepare data.
-  int n = 5000;
+  int n = 5000; // 5000 data points
   std::vector<double> x(n), y(n), z(n), w(n, 2);
   for (int i = 0; i < n; ++i) {
     x.at(i) = i * i;
@@ -15,30 +14,17 @@ int main() {
     z.at(i) = log(i);
   }
 
-  // Set the size of output image = 1200x780 pixels
-  plt::figure_size(1200, 780);
+  plt::figure(); // declare a new figure (optional if only one is used)
 
-  // Plot line from given x and y data. Color is selected automatically.
-  plt::plot(x, y);
+  plt::plot(x, y); // automatic coloring: tab:blue
+  plt::show(false);
+  plt::plot(x, w, "r--");                 // red dashed line
+  plt::plot(x, z, {{"label", "log(x)"}}); // legend label "log(x)"
 
-  // Plot a red dashed line from given x and y data.
-  plt::plot(x, w, "r--");
+  plt::xlim(0, 1000 * 1000);    // x-axis interval: [0, 1e6]
+  plt::title("Standard usage"); // set a title
+  plt::legend();                // enable the legend
 
-  // Plot a line whose name will show up as "log(x)" in the legend.
-  plt::plot(x, z, {{"label", "log(x)"}});
-
-  // Set x-axis to interval [0,1000000]
-  plt::xlim(0, 1000 * 1000);
-
-  // Add graph title
-  plt::title("Sample figure");
-
-  // Enable legend.
-  plt::legend();
-
-  // save figure
-  const char *filename = "./basic.png";
-  std::cout << "Saving result to " << filename << std::endl;
-  ;
-  plt::save(filename);
+  plt::savefig("standard.pdf"); // save the figure
+  plt::show();
 }

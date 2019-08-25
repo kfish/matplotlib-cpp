@@ -1,8 +1,10 @@
 #include "../matplotlibcpp.h"
+#include <vector>
 
 namespace plt = matplotlibcpp;
 
 int main() {
-  plt::plot({1, 3, 2, 4});
-  plt::show();
+  std::vector<double> y = {1, 3, 2, 4};
+  plt::plot(y);
+  plt::savefig("minimal.pdf");
 }
