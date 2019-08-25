@@ -1492,7 +1492,7 @@ inline void ylabel(const std::string &str,
   Py_DECREF(res);
 }
 
-inline void grid(bool flag) {
+inline void grid(bool flag = true) {
   PyObject *pyflag = flag ? Py_True : Py_False;
   Py_INCREF(pyflag);
 
@@ -1579,19 +1579,32 @@ template <typename Numeric> inline void pause(Numeric interval) {
   Py_DECREF(res);
 }
 
-inline void save(const std::string &filename) {
+inline void savefig(const std::string &filename,
+                    const std::map<std::string, std::string> &keywords = {}) {
   PyObject *pyfilename = PyString_FromString(filename.c_str());
 
   PyObject *args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pyfilename);
 
-  PyObject *res = PyObject_CallObject(
-      detail::_interpreter::get().s_python_function_save, args);
+  PyObject *kwargs = PyDict_New();
+  for (auto it = keywords.begin(); it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
+  }
+
+  PyObject *res = PyObject_Call(
+      detail::_interpreter::get().s_python_function_save, args, kwargs);
   if (!res)
     throw std::runtime_error("Call to save() failed.");
 
+  Py_DECREF(kwargs);
   Py_DECREF(args);
   Py_DECREF(res);
+}
+
+inline void save(const std::string &filename) {
+  std::cerr << "matplotlibcpp::save is deprecated, use savefig instead\n";
+  matplotlibcpp::savefig(filename);
 }
 
 inline void clf() {
