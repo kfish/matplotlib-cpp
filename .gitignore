@@ -33,3 +33,10 @@
 
 # Build
 /examples/build/*
+
+# Images
+*.png
+*.jpg
+*.pdf
+*.eps
+*.gif
