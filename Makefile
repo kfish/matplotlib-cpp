@@ -17,7 +17,7 @@ definitions = -std=c++11
 eigen_include = -I /usr/local/include/eigen3
 
 # Executable names for examples (w/o Eigen)
-example_execs = minimal basic animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
+example_execs = minimal modern basic animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
 
 # Executable names for examples using Eigen
 eigen_execs = eigen loglog semilogx semilogy small

@@ -1,10 +1,15 @@
 //
-// Changes:
-// * Make work for Eigen Vectors and Matrices
+// Wishlist:
+// * (WIP) Make work for Eigen Vectors and Matrices
+// * add submodule for our own functions such as spy
+// * export functions in different files for better structure
+// * make plot(y) work with x of unsigned type, or get to the bottom of that
+//   problem at least
+//
+// Changed:
 // * Implement a better way for named_plot, maybe just as additional
 //   method with extra keyword
 // * add location keyword for legend
-// * add submodule for our own functions such as spy
 //
 
 #pragma once
@@ -446,8 +451,7 @@ namespace detail {
 // @param s The formatting string for colour, marker and linestyle
 // @param keywords Additional keywords, such as label
 // @return true if plot was successful, false otherwise
-template <typename VectorX = std::vector<double>,
-          typename VectorY = std::vector<double>>
+template <typename VectorX, typename VectorY>
 bool plot_base(PyObject *const pyfunc, const VectorX &x, const VectorY &y,
                const std::string &s = "",
                const std::map<std::string, std::string> &keywords = {}) {
@@ -497,11 +501,10 @@ bool plot(const VectorX &x, const VectorY &y,
 template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y, const std::string &format = "",
           const std::map<std::string, std::string> &keywords = {}) {
-  // TODO can this be <size_t> or do we need <typename Vector::value_type>?
-  // before the conversion of this function from vector<Numeric> to Vector
-  // the created vector x was of the same type as y
-  std::vector<std::size_t> x(y.size());
-  for (std::size_t i = 0; i < x.size(); ++i)
+  // Note: cannot be an unsigned type for some reason, yields an overflow
+  // problem..
+  std::vector<int> x(y.size());
+  for (int i = 0; i < x.size(); ++i)
     x.at(i) = i;
 
   return plot(x, y, format);
@@ -510,8 +513,8 @@ bool plot(const VectorY &y, const std::string &format = "",
 template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
-  std::vector<std::size_t> x(y.size());
-  for (std::size_t i = 0; i < x.size(); ++i)
+  std::vector<int> x(y.size());
+  for (int i = 0; i < x.size(); ++i)
     x.at(i) = i;
 
   return plot(x, y, "", keywords);
@@ -1666,7 +1669,6 @@ ginput(const int numClicks = 1,
   return out;
 }
 
-// Actually, is there any reason not to call this automatically for every plot?
 inline void tight_layout() {
   PyObject *res = PyObject_CallObject(
       detail::_interpreter::get().s_python_function_tight_layout,
@@ -1678,15 +1680,16 @@ inline void tight_layout() {
   Py_DECREF(res);
 }
 
-#if 0
 // recursion stop for the below
 template <typename... Args> bool plot() { return true; }
 
+// enable plotting of multiple triples (x, y, format)
 template <typename A, typename B, typename... Args>
 bool plot(const A &a, const B &b, const std::string &format, Args... args) {
   return plot(a, b, format) && plot(args...);
 }
 
+#if 0
 /*
  * This group of plot() functions is needed to support initializer lists, i.e.
  * calling plot( {1,2,3,4} )
