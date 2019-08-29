@@ -365,7 +365,7 @@ template <> struct select_npy_type<uint64_t> {
 template <typename Vector> PyObject *get_array(const Vector &v) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
                                // numpy commands to work
-  NPY_TYPES type = select_npy_type<Numeric>::type;
+  NPY_TYPES type = select_npy_type<typename Vector::value_type>::type;
   if (type == NPY_NOTYPE) {
     std::vector<double> vd(v.size());
     npy_intp vsize = v.size();
