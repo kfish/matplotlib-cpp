@@ -360,29 +360,6 @@ template <> struct select_npy_type<uint64_t> {
   const static NPY_TYPES type = NPY_UINT64;
 };
 
-// TODO change to Vector template so useable for Eigen vectors,
-// should be enough since it also provides the end and begin methods
-template <typename Vector> PyObject *get_array(const Vector &v) {
-  detail::_interpreter::get(); // interpreter needs to be initialized for the
-                               // numpy commands to work
-  NPY_TYPES type = select_npy_type<typename Vector::value_type>::type;
-  if (type == NPY_NOTYPE) {
-    std::vector<double> vd(v.size());
-    npy_intp vsize = v.size();
-    // Eigen Vectors do not support begin/end() in the currently stable version
-    // this can be changed once Eigen 3.4. is released
-    std::copy(v.data(), v.data() + v.size(), vd.begin());
-    PyObject *varray =
-        PyArray_SimpleNewFromData(1, &vsize, NPY_DOUBLE, (void *)(vd.data()));
-    return varray;
-  }
-
-  npy_intp vsize = v.size();
-  PyObject *varray =
-      PyArray_SimpleNewFromData(1, &vsize, type, (void *)(v.data()));
-  return varray;
-}
-
 template <typename Vector> PyObject *get_array(const Vector &v) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
                                // numpy commands to work
