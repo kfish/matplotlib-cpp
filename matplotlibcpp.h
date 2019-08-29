@@ -393,6 +393,12 @@ template <typename Vector> PyObject *get_array(const Vector &v) {
     npy_intp vsize = v.size();
     // Eigen Vectors do not support begin/end() in the currently stable version
     // this can be changed once Eigen 3.4. is released
+    // data() returns a pointer to the storage of the first element. If the
+    // vector is modified afterwards, it may be rendedered invalid.
+    // Note, that this is not an issue since get_array() is called by a
+    // plot command using the instantaneous state of the vector.
+    // The pointer is not reused. If the vector is plotted anew, data() is
+    // called again and again get's the current, valid storage location.
     std::copy(v.data(), v.data() + v.size(), vd.begin());
     PyObject *varray =
         PyArray_SimpleNewFromData(1, &vsize, NPY_DOUBLE, (void *)(vd.data()));
