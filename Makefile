@@ -20,7 +20,7 @@ eigen_include = -I /usr/local/include/eigen3
 example_execs = minimal modern basic animation nonblock xkcd quiver bar surface subplot fill_inbetween fill update
 
 # Executable names for examples using Eigen
-eigen_execs = eigen loglog semilogx semilogy small
+eigen_execs = eigen loglog semilogx semilogy small spy
 
 # Example targets (default if just 'make' is called)
 examples: $(example_execs)
