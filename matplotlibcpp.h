@@ -900,12 +900,19 @@ bool scatter(const VectorX &x, const VectorY &y, const double s = 1.0) {
 
 // @brief Spy plot
 // @param A the matrix
+// @param precision Plot all elements above `|precision|`
+// @param keywords Additional keywords
 template <typename Matrix>
-bool spy(const Matrix &A, double precision=0) {
+bool spy(const Matrix &A,
+         const std::map<std::string, std::string>& keywords = {}) {
   PyObject *Aarray = get_2darray(A);
 
   PyObject *kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs, "precision", PyFloat_FromDouble(precision));
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
+  }
 
   PyObject *plot_args = PyTuple_New(1);
   PyTuple_SetItem(plot_args, 0, Aarray);
