@@ -27,7 +27,4 @@ else()
   add_definitions(-DWITHOUT_NUMPY)
 endif()
 
-# add_subdirectory("examples")
-set(CMAKE_CXX_STANDARD 17)
-add_executable(basic examples/basic.cpp matplotlibcpp.h)
-target_link_libraries(basic ${Python3_LIBRARIES})
+add_subdirectory(examples)
