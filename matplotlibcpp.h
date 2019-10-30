@@ -1072,9 +1072,9 @@ bool stem(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
   return res;
 }
 
-template <typename NumericX, typename NumericY>
-bool errorbar(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
-              const std::vector<NumericX> &yerr,
+template <typename VectorX, typename VectorY>
+bool errorbar(const VectorX &x, const VectorY &y,
+              const VectorY &yerr,
               const std::map<std::string, std::string> &keywords = {}) {
   assert(x.size() == y.size());
 
