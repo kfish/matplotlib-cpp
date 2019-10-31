@@ -1,10 +1,11 @@
 //
 // Wishlist:
 // * (WIP) Make work for Eigen Vectors and Matrices
-// * add submodule for our own functions such as spy
 // * export functions in different files for better structure
 // * make plot(y) work with x of unsigned type, or get to the bottom of that
 //   problem at least
+// * errorbar for xerr and yerr
+// * errorbar for yerr of shape (2, N)
 //
 // Changed:
 // * Implement a better way for named_plot, maybe just as additional
@@ -445,7 +446,8 @@ PyObject *get_2darray(const Matrix &A) {
 
 #else // fallback if we don't have numpy: copy every element of the given vector
 
-template <typename Vector> PyObject *get_array(const Vector &v) {
+template <typename Vector>
+PyObject *get_array(const Vector &v) {
   detail::_interpreter::get();
   PyObject *list = PyList_New(v.size());
   for (size_t i = 0; i < v.size(); ++i) {
@@ -460,8 +462,8 @@ namespace detail {
 // @brief Since most of the plot commands require the exact same usage apart
 //        from the call to the correct Python function, we encapsulate this
 // @param pyfunc The matplotlib function to be called with the given arguments
-// @param x The x vector, must support std::vector methods
-// @param y The y vector, must support std::vector methods
+// @param x The x vector
+// @param y The y vector
 // @param s The formatting string for colour, marker and linestyle
 // @param keywords Additional keywords, such as label
 // @return true if plot was successful, false otherwise
@@ -499,6 +501,12 @@ bool plot_base(PyObject *const pyfunc, const VectorX &x, const VectorY &y,
 
 } // namespace detail
 
+// @brief standard plot function supporting the args (x, y, s, keywords)
+// @param x The x vector
+// @param y The y vector
+// @param s The formatting string
+// @param keywords Additional keywords
+// @return true, if successful, false otherwise
 template <typename VectorX, typename VectorY>
 bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
           const std::map<std::string, std::string> &keywords = {}) {
@@ -506,12 +514,15 @@ bool plot(const VectorX &x, const VectorY &y, const std::string &s = "",
                            x, y, s, keywords);
 }
 
+// @brief standard plot function without formatting string, needed if
+//        keywords are given but formatting string is not
 template <typename VectorX, typename VectorY>
 bool plot(const VectorX &x, const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
   return plot(x, y, "", keywords);
 }
 
+// @brief standard plot function if x data is not specified
 template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y, const std::string &format = "",
           const std::map<std::string, std::string> &keywords = {}) {
@@ -524,6 +535,8 @@ bool plot(const VectorY &y, const std::string &format = "",
   return plot(x, y, format);
 }
 
+// @brief standard plot function if x data is not specified and the formatting
+//        string is missing
 template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
@@ -534,6 +547,7 @@ bool plot(const VectorY &y,
   return plot(x, y, "", keywords);
 }
 
+// @brief loglog plot function, see `plot` for more detail
 template <typename VectorX, typename VectorY>
 bool loglog(const VectorX &x, const VectorY &y, const std::string &s = "",
             const std::map<std::string, std::string> &keywords = {}) {
@@ -567,6 +581,7 @@ bool loglog(const VectorY &y,
   return loglog(x, y, "", keywords);
 }
 
+// @brief semilogx plot function, see `plot` for more detail
 template <typename VectorX, typename VectorY>
 bool semilogx(const VectorX &x, const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
@@ -601,6 +616,7 @@ bool semilogx(const VectorY &y,
   return semilogx(x, y, "", keywords);
 }
 
+// @brief semilogy plot function, see `plot` for more detail
 template <typename VectorX, typename VectorY>
 bool semilogy(const VectorX &x, const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
@@ -635,10 +651,13 @@ bool semilogy(const VectorY &y,
   return semilogy(x, y, "", keywords);
 }
 
-template <typename Numeric>
-void plot_surface(const std::vector<::std::vector<Numeric>> &x,
-                  const std::vector<::std::vector<Numeric>> &y,
-                  const std::vector<::std::vector<Numeric>> &z,
+// @brief plot_surface for datapoints (x_ij, y_ij, z_ij) with i,j = 0..n
+// @param x The x values of the datapoints in a matrix
+// @param y The y values of the datapoints in a matrix
+// @param z The function value of the datapoints in a matrix
+// @param keywords Additional keywords
+template <typename Matrix>
+void plot_surface(const Matrix &x, const Matrix& y, const Matrix& z,
                   const std::map<std::string, std::string> &keywords =
                       std::map<std::string, std::string>()) {
   // We lazily load the modules here the first time this function is called
