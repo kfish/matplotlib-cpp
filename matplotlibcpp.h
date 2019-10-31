@@ -392,9 +392,7 @@ template <typename Vector> PyObject *get_array(const Vector &v) {
   return varray;
 }
 
-// TODO maybe we have to add a function for Eigen matrices, not sure
-// if the v[0] is valid for matrices and also the ::std::vector &v_row
-// probably doesn't work
+// specialized get_2darray function for nested std::vectors
 template <typename Numeric>
 PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
@@ -420,7 +418,7 @@ PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
   return reinterpret_cast<PyObject *>(varray);
 }
 
-// suitable for Eigen matrices
+// suitable for more general matrices (especially Eigen matrices)
 template <typename Matrix>
 PyObject *get_2darray(const Matrix &A) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
@@ -583,7 +581,7 @@ bool semilogx(const VectorX &x, const VectorY &y,
   return semilogx(x, y, "", keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool semilogx(const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
@@ -593,7 +591,7 @@ bool semilogx(const VectorY &y, const std::string &s = "",
   return semilogx(x, y, s, keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool semilogx(const VectorY &y,
               const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
@@ -617,7 +615,7 @@ bool semilogy(const VectorX &x, const VectorY &y,
   return semilogy(x, y, "", keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool semilogy(const VectorY &y, const std::string &s = "",
               const std::map<std::string, std::string> &keywords = {}) {
   std::vector<std::size_t> x(y.size());
@@ -627,7 +625,7 @@ bool semilogy(const VectorY &y, const std::string &s = "",
   return semilogy(x, y, s, keywords);
 }
 
-template <typename VectorY>
+template <typename VectorY = std::vector<double>>
 bool semilogy(const VectorY &y,
               const std::map<std::string, std::string> &keywords) {
   std::vector<std::size_t> x(y.size());
