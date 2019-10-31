@@ -978,8 +978,7 @@ bool bar(const std::vector<Numeric> &y, std::string ec = "black",
   return res;
 }
 
-inline bool
-subplots_adjust(const std::map<std::string, double> &keywords = {}) {
+inline bool subplots_adjust(const std::map<std::string, double> &keywords = {}) {
 
   PyObject *kwargs = PyDict_New();
   for (std::map<std::string, double>::const_iterator it = keywords.begin();
@@ -1751,26 +1750,6 @@ template <typename A, typename B, typename... Args>
 bool plot(const A &a, const B &b, const std::string &format, Args... args) {
   return plot(a, b, format) && plot(args...);
 }
-
-#if 0
-/*
- * This group of plot() functions is needed to support initializer lists, i.e.
- * calling plot( {1,2,3,4} )
- */
-inline bool plot(const std::vector<double> &x, const std::vector<double> &y,
-                 const std::string &format = "") {
-  return plot<std::vector<double>, std::vector<double>>(x, y, format);
-}
-
-inline bool plot(const std::vector<double> &y, const std::string &format = "") {
-  return plot<std::vector<double>>(y, format);
-}
-
-inline bool plot(const std::vector<double> &x, const std::vector<double> &y,
-                 const std::map<std::string, std::string> &keywords) {
-  return plot<std::vector<double>, std::vector<double>>(x, y, keywords);
-}
-#endif
 
 /*
  * This class allows dynamic plots, ie changing the plotted data without
