@@ -16,29 +16,34 @@ void get_data(Vector& x, Vector& y, Vector& err) {
   for (unsigned i = 0; i < n; ++i) {
     *(x.data() + i) = 1.0 * i / n;
     *(y.data() + i) = sin(2.0 * M_PI * i / n);
-    *(err.data() + i) = exp(-2.0 * i / n);
+    *(err.data() + i) = exp(-0.1 * i);
   }
 }
 
 template <typename Vector>
 void plot(unsigned n) {
+  // get the data
   Vector x(n), y(n), err(n);
   get_data(x, y, err);
 
-  plt::figure();
+  // plot errorbar plot
   plt::errorbar(x, y, err);
-  plt::show();
 }
 
 int main() {
+  // create figure
+  plt::figure();
 
+  // plot with std::vector
   plot<std::vector<double>>(10);
 
+  // plot with Eigen::VectorXd, if specified
   #ifdef WITH_EIGEN
-  #include <iostream>
-  std::cout << "Hello!\n";
-  plot<Eigen::VectorXd>(10);
+  plot<Eigen::VectorXd>(13);
   #endif
+
+  // show plot
+  plt::show();
 
   return 0;
 }
