@@ -53,6 +53,8 @@ struct _interpreter {
   PyObject *s_python_function_fignum_exists;
   PyObject *s_python_function_plot;
   PyObject *s_python_function_quiver;
+  PyObject *s_python_function_axhline;
+  PyObject *s_python_function_axvline;
   PyObject *s_python_function_semilogx;
   PyObject *s_python_function_semilogy;
   PyObject *s_python_function_loglog;
@@ -182,6 +184,8 @@ private:
         PyObject_GetAttrString(pymod, "fignum_exists");
     s_python_function_plot = PyObject_GetAttrString(pymod, "plot");
     s_python_function_quiver = PyObject_GetAttrString(pymod, "quiver");
+    s_python_function_axhline = PyObject_GetAttrString(pymod, "axhline");
+    s_python_function_axvline = PyObject_GetAttrString(pymod, "axvline");
     s_python_function_semilogx = PyObject_GetAttrString(pymod, "semilogx");
     s_python_function_semilogy = PyObject_GetAttrString(pymod, "semilogy");
     s_python_function_loglog = PyObject_GetAttrString(pymod, "loglog");
@@ -1063,6 +1067,64 @@ bool quiver(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
   return res;
 }
 
+template <typename NumericY>
+void axhline(const NumericY y,
+             const std::map<std::string, std::string> keywords = {}) {
+  detail::_interpreter::get();
+
+  PyObject *kwargs = PyDict_New();
+
+  // add location
+  PyDict_SetItemString(kwargs, "y", PyFloat_FromDouble(y));
+
+  // add other keywords
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
+  }
+
+  PyObject *res =
+      PyObject_Call(detail::_interpreter::get().s_python_function_axhline,
+                    detail::_interpreter::get().s_python_empty_tuple, kwargs);
+
+  Py_DECREF(kwargs);
+
+  if (!res)
+    throw std::runtime_error("Call to axhline() failed.");
+
+  Py_DECREF(res);
+}
+
+template <typename NumericX>
+void axvline(const NumericX x,
+             const std::map<std::string, std::string> keywords = {}) {
+  detail::_interpreter::get();
+
+  PyObject *kwargs = PyDict_New();
+
+  // add location
+  PyDict_SetItemString(kwargs, "x", PyFloat_FromDouble(x));
+
+  // add other keywords
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
+  }
+
+  PyObject *res =
+      PyObject_Call(detail::_interpreter::get().s_python_function_axvline,
+                    detail::_interpreter::get().s_python_empty_tuple, kwargs);
+
+  Py_DECREF(kwargs);
+
+  if (!res)
+    throw std::runtime_error("Call to axvline() failed.");
+
+  Py_DECREF(res);
+}
+
 template <typename NumericX, typename NumericY>
 bool stem(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
           const std::string &s = "") {
@@ -1230,15 +1292,27 @@ inline void figure_size(size_t w, size_t h) {
 
 template <typename Vector = std::vector<double>>
 inline void legend(const std::string &loc = "best",
-                   const Vector &bbox_to_anchor = Vector()) {
+                   const Vector &bbox_to_anchor = Vector(),
+                   const std::map<std::string, std::string>& keywords = {}) {
   detail::_interpreter::get();
 
   PyObject *kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs, "loc", PyString_FromString(loc.c_str()));
 
+  // add location
+  if (loc != "")
+    PyDict_SetItemString(kwargs, "loc", PyString_FromString(loc.c_str()));
+
+  // add bbox to anchor
   if (bbox_to_anchor.size() == 2 || bbox_to_anchor.size() == 4) {
     PyObject *bbox = get_array(bbox_to_anchor);
     PyDict_SetItemString(kwargs, "bbox_to_anchor", bbox);
+  }
+
+  // add other keywords
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
   }
 
   PyObject *res =
@@ -1253,7 +1327,25 @@ inline void legend(const std::string &loc = "best",
   Py_DECREF(res);
 }
 
-template <typename Numeric> void ylim(Numeric bottom, Numeric top) {
+template <typename Vector>
+inline void legend(const Vector& bbox_to_anchor,
+                   const std::map<std::string, std::string>& keywords = {}) {
+  legend("", bbox_to_anchor, keywords);
+}
+
+/*
+inline void legend(const std::string& loc,
+                   const std::map<std::string, std::string>& keywords = {}) {
+  legend(loc, std::vector<double>(), keywords);
+}
+
+inline void legend(const std::map<std::string, std::string>& keywords) {
+  legend("", std::vector<double>(), keywords);
+}
+*/
+
+template <typename Numeric>
+void ylim(const Numeric bottom, const Numeric top) {
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(2);
@@ -1272,7 +1364,8 @@ template <typename Numeric> void ylim(Numeric bottom, Numeric top) {
   Py_DECREF(res);
 }
 
-template <typename Numeric> void xlim(Numeric left, Numeric right) {
+template <typename Numeric>
+void xlim(const Numeric left, const Numeric right) {
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(2);
@@ -1751,11 +1844,8 @@ bool plot(const A &a, const B &b, const std::string &format, Args... args) {
   return plot(a, b, format) && plot(args...);
 }
 
-/*
- * This class allows dynamic plots, ie changing the plotted data without
- * clearing and re-plotting
- */
-
+// This class allows dynamic plots, ie changing the plotted data without
+// clearing and re-plotting
 class Plot {
 public:
   // default initialization with plot label, some data and format
