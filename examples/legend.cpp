@@ -10,6 +10,14 @@ void basic() {
   plt::show();
 }
 
+void loc() {
+  plt::figure();
+  plt::plot({1, 2, 3}, {{"label", "a line"}});
+  plt::plot({1, 3, 5}, {{"label", "also a line"}});
+  plt::legend("lower left");
+  plt::show();
+}
+
 void bbox() {
   plt::figure();
   plt::plot({1, 2, 3}, {{"label", "a line"}});
@@ -17,7 +25,7 @@ void bbox() {
   plt::legend(std::vector<double>{0.5, 0.7});
   plt::show();
 }
-/*
+
 void keywords() {
   plt::figure();
   plt::plot({1, 2, 3}, {{"label", "a line"}});
@@ -25,10 +33,11 @@ void keywords() {
   plt::legend("best", {{"borderpad", "0.2"}});
   plt::show();
 }
-*/
+
 int main() {
   basic();
+  loc();
   bbox();
-  // keywords();
+  keywords();
   return 0;
 }

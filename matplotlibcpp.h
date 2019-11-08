@@ -24,6 +24,7 @@
 #include <numeric>
 #include <stdexcept>
 #include <vector>
+#include <sstream>
 
 #include <Python.h>
 
@@ -231,24 +232,23 @@ private:
         !s_python_function_draw || !s_python_function_pause ||
         !s_python_function_figure || !s_python_function_fignum_exists ||
         !s_python_function_plot || !s_python_function_quiver ||
-        !s_python_function_contour ||
-        !s_python_function_semilogx || !s_python_function_semilogy ||
-        !s_python_function_loglog || !s_python_function_fill ||
-        !s_python_function_fill_between || !s_python_function_subplot ||
-        !s_python_function_legend || !s_python_function_ylim ||
-        !s_python_function_title || !s_python_function_axis ||
-        !s_python_function_xlabel || !s_python_function_ylabel ||
-        !s_python_function_xticks || !s_python_function_yticks ||
-        !s_python_function_xscale || !s_python_function_yscale ||
-        !s_python_function_grid || !s_python_function_xlim ||
-        !s_python_function_ion || !s_python_function_ginput ||
-        !s_python_function_save || !s_python_function_clf ||
-        !s_python_function_annotate || !s_python_function_errorbar ||
-        !s_python_function_errorbar || !s_python_function_tight_layout ||
-        !s_python_function_stem || !s_python_function_xkcd ||
-        !s_python_function_text || !s_python_function_suptitle ||
-        !s_python_function_bar || !s_python_function_subplots_adjust ||
-        !s_python_function_spy) {
+        !s_python_function_contour || !s_python_function_semilogx ||
+        !s_python_function_semilogy || !s_python_function_loglog ||
+        !s_python_function_fill || !s_python_function_fill_between ||
+        !s_python_function_subplot || !s_python_function_legend ||
+        !s_python_function_ylim || !s_python_function_title ||
+        !s_python_function_axis || !s_python_function_xlabel ||
+        !s_python_function_ylabel || !s_python_function_xticks ||
+        !s_python_function_yticks || !s_python_function_xscale ||
+        !s_python_function_yscale || !s_python_function_grid ||
+        !s_python_function_xlim || !s_python_function_ion ||
+        !s_python_function_ginput || !s_python_function_save ||
+        !s_python_function_clf || !s_python_function_annotate ||
+        !s_python_function_errorbar || !s_python_function_errorbar ||
+        !s_python_function_tight_layout || !s_python_function_stem ||
+        !s_python_function_xkcd || !s_python_function_text ||
+        !s_python_function_suptitle || !s_python_function_bar ||
+        !s_python_function_subplots_adjust || !s_python_function_spy) {
       throw std::runtime_error("Couldn't find required function!");
     }
 
@@ -302,6 +302,24 @@ private:
 
   ~_interpreter() { Py_Finalize(); }
 };
+
+void process_keywords(PyObject *kwargs,
+                      const std::map<std::string, std::string> &keywords) {
+  for (auto const &item : keywords) {
+    // check if the keyword is a number
+    try {
+      std::stringstream ss(item.second);
+      double d;
+      ss >> d;
+      PyDict_SetItemString(kwargs, item.first.c_str(), PyFloat_FromDouble(d));
+    }
+    // if its not, then leave it as string
+    catch (std::exception& e) {
+      PyDict_SetItemString(kwargs, item.first.c_str(),
+                           PyString_FromString(item.second.c_str()));
+                         }
+  }
+}
 
 } // end namespace detail
 
@@ -429,8 +447,7 @@ PyObject *get_2darray(const std::vector<::std::vector<Numeric>> &v) {
 }
 
 // suitable for more general matrices (especially Eigen matrices)
-template <typename Matrix>
-PyObject *get_2darray(const Matrix &A) {
+template <typename Matrix> PyObject *get_2darray(const Matrix &A) {
   detail::_interpreter::get(); // interpreter needs to be initialized for the
                                // numpy commands to work
   if (A.size() < 1)
@@ -455,8 +472,7 @@ PyObject *get_2darray(const Matrix &A) {
 
 #else // fallback if we don't have numpy: copy every element of the given vector
 
-template <typename Vector>
-PyObject *get_array(const Vector &v) {
+template <typename Vector> PyObject *get_array(const Vector &v) {
   detail::_interpreter::get();
   PyObject *list = PyList_New(v.size());
   for (size_t i = 0; i < v.size(); ++i) {
@@ -666,7 +682,7 @@ bool semilogy(const VectorY &y,
 // @param z The function value of the datapoints in a matrix
 // @param keywords Additional keywords
 template <typename Matrix>
-void plot_surface(const Matrix &x, const Matrix& y, const Matrix& z,
+void plot_surface(const Matrix &x, const Matrix &y, const Matrix &z,
                   const std::map<std::string, std::string> &keywords =
                       std::map<std::string, std::string>()) {
   // We lazily load the modules here the first time this function is called
@@ -765,14 +781,13 @@ void plot_surface(const Matrix &x, const Matrix& y, const Matrix& z,
     Py_DECREF(res);
 }
 
-
 // @brief plot_surface for datapoints (x_ij, y_ij, z_ij) with i,j = 0..n
 // @param x The x values of the datapoints in a matrix
 // @param y The y values of the datapoints in a matrix
 // @param z The function value of the datapoints in a matrix
 // @param keywords Additional keywords
 template <typename Matrix>
-void contour(const Matrix &x, const Matrix& y, const Matrix& z,
+void contour(const Matrix &x, const Matrix &y, const Matrix &z,
              const std::map<std::string, std::string> &keywords = {}) {
   detail::_interpreter::get();
 
@@ -801,8 +816,8 @@ void contour(const Matrix &x, const Matrix& y, const Matrix& z,
                          PyString_FromString(it->second.c_str()));
   }
 
-  PyObject *res = PyObject_Call(detail::_interpreter::get().s_python_function_contour,
-  args, kwargs);
+  PyObject *res = PyObject_Call(
+      detail::_interpreter::get().s_python_function_contour, args, kwargs);
   if (!res)
     throw std::runtime_error("failed surface");
 
@@ -980,10 +995,9 @@ bool scatter(const VectorX &x, const VectorY &y, const double s = 1.0,
 
 template <typename VectorX, typename VectorY>
 bool scatter(const VectorX &x, const VectorY &y,
-             const std::map<std::string, std::string>& keywords) {
+             const std::map<std::string, std::string> &keywords) {
   return scatter(x, y, 1.0, keywords);
 }
-
 
 // @brief Spy plot
 // @param A the matrix
@@ -991,7 +1005,7 @@ bool scatter(const VectorX &x, const VectorY &y,
 // @param keywords Additional keywords
 template <typename Matrix>
 bool spy(const Matrix &A,
-         const std::map<std::string, std::string>& keywords = {}) {
+         const std::map<std::string, std::string> &keywords = {}) {
   PyObject *Aarray = get_2darray(A);
 
   PyObject *kwargs = PyDict_New();
@@ -1048,7 +1062,8 @@ bool bar(const std::vector<Numeric> &y, std::string ec = "black",
   return res;
 }
 
-inline bool subplots_adjust(const std::map<std::string, double> &keywords = {}) {
+inline bool
+subplots_adjust(const std::map<std::string, double> &keywords = {}) {
 
   PyObject *kwargs = PyDict_New();
   for (std::map<std::string, double>::const_iterator it = keywords.begin();
@@ -1217,8 +1232,7 @@ bool stem(const std::vector<NumericX> &x, const std::vector<NumericY> &y,
 }
 
 template <typename VectorX, typename VectorY>
-bool errorbar(const VectorX &x, const VectorY &y,
-              const VectorY &yerr,
+bool errorbar(const VectorX &x, const VectorY &y, const VectorY &yerr,
               const std::map<std::string, std::string> &keywords = {}) {
   assert(x.size() == y.size());
 
@@ -1359,7 +1373,7 @@ inline void figure_size(size_t w, size_t h) {
 template <typename Vector = std::vector<double>>
 inline void legend(const std::string &loc = "best",
                    const Vector &bbox_to_anchor = Vector(),
-                   const std::map<std::string, std::string>& keywords = {}) {
+                   const std::map<std::string, std::string> &keywords = {}) {
   detail::_interpreter::get();
 
   PyObject *kwargs = PyDict_New();
@@ -1375,11 +1389,7 @@ inline void legend(const std::string &loc = "best",
   }
 
   // add other keywords
-  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
-       it != keywords.end(); ++it) {
-    PyDict_SetItemString(kwargs, it->first.c_str(),
-                         PyUnicode_FromString(it->second.c_str()));
-  }
+  detail::process_keywords(kwargs, keywords);
 
   PyObject *res =
       PyObject_Call(detail::_interpreter::get().s_python_function_legend,
@@ -1394,9 +1404,21 @@ inline void legend(const std::string &loc = "best",
 }
 
 template <typename Vector>
-inline void legend(const Vector& bbox_to_anchor,
-                   const std::map<std::string, std::string>& keywords = {}) {
+inline void legend(const Vector &bbox_to_anchor,
+                   const std::map<std::string, std::string> &keywords = {}) {
   legend("", bbox_to_anchor, keywords);
+}
+
+inline void legend(const std::string &loc,
+                   const std::map<std::string, std::string> &keywords = {}) {
+  legend(loc, std::vector<double>(), keywords);
+}
+
+// to support C-style strings we also need const char[], std::string only
+// does not capture calls of style legend("lower left")
+inline void legend(const char loc[],
+                   const std::map<std::string, std::string> &keywords = {}) {
+  legend(loc, std::vector<double>(), keywords);
 }
 
 /*
@@ -1410,8 +1432,7 @@ inline void legend(const std::map<std::string, std::string>& keywords) {
 }
 */
 
-template <typename Numeric>
-void ylim(const Numeric bottom, const Numeric top) {
+template <typename Numeric> void ylim(const Numeric bottom, const Numeric top) {
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(2);
@@ -1430,8 +1451,7 @@ void ylim(const Numeric bottom, const Numeric top) {
   Py_DECREF(res);
 }
 
-template <typename Numeric>
-void xlim(const Numeric left, const Numeric right) {
+template <typename Numeric> void xlim(const Numeric left, const Numeric right) {
   detail::_interpreter::get();
 
   PyObject *list = PyList_New(2);
