@@ -93,6 +93,7 @@ struct _interpreter {
   PyObject *s_python_function_suptitle;
   PyObject *s_python_function_bar;
   PyObject *s_python_function_subplots_adjust;
+  PyObject *s_python_function_imshow;
 
   /* For now, _interpreter is implemented as a singleton since its currently not
      possible to have multiple independent embedded python interpreters without
@@ -227,28 +228,30 @@ private:
     s_python_function_bar = PyObject_GetAttrString(pymod, "bar");
     s_python_function_subplots_adjust =
         PyObject_GetAttrString(pymod, "subplots_adjust");
+    s_python_function_imshow = PyObject_GetAttrString(pymod, "imshow");
 
     if (!s_python_function_show || !s_python_function_close ||
         !s_python_function_draw || !s_python_function_pause ||
         !s_python_function_figure || !s_python_function_fignum_exists ||
         !s_python_function_plot || !s_python_function_quiver ||
-        !s_python_function_contour || !s_python_function_semilogx ||
-        !s_python_function_semilogy || !s_python_function_loglog ||
-        !s_python_function_fill || !s_python_function_fill_between ||
-        !s_python_function_subplot || !s_python_function_legend ||
-        !s_python_function_ylim || !s_python_function_title ||
-        !s_python_function_axis || !s_python_function_xlabel ||
-        !s_python_function_ylabel || !s_python_function_xticks ||
-        !s_python_function_yticks || !s_python_function_xscale ||
-        !s_python_function_yscale || !s_python_function_grid ||
-        !s_python_function_xlim || !s_python_function_ion ||
-        !s_python_function_ginput || !s_python_function_save ||
-        !s_python_function_clf || !s_python_function_annotate ||
-        !s_python_function_errorbar || !s_python_function_errorbar ||
-        !s_python_function_tight_layout || !s_python_function_stem ||
-        !s_python_function_xkcd || !s_python_function_text ||
-        !s_python_function_suptitle || !s_python_function_bar ||
-        !s_python_function_subplots_adjust || !s_python_function_spy) {
+        !s_python_function_contour ||
+        !s_python_function_semilogx || !s_python_function_semilogy ||
+        !s_python_function_loglog || !s_python_function_fill ||
+        !s_python_function_fill_between || !s_python_function_subplot ||
+        !s_python_function_legend || !s_python_function_ylim ||
+        !s_python_function_title || !s_python_function_axis ||
+        !s_python_function_xlabel || !s_python_function_ylabel ||
+        !s_python_function_xticks || !s_python_function_yticks ||
+        !s_python_function_xscale || !s_python_function_yscale ||
+        !s_python_function_grid || !s_python_function_xlim ||
+        !s_python_function_ion || !s_python_function_ginput ||
+        !s_python_function_save || !s_python_function_clf ||
+        !s_python_function_annotate || !s_python_function_errorbar ||
+        !s_python_function_errorbar || !s_python_function_tight_layout ||
+        !s_python_function_stem || !s_python_function_xkcd ||
+        !s_python_function_text || !s_python_function_suptitle ||
+        !s_python_function_bar || !s_python_function_subplots_adjust ||
+        !s_python_function_spy || !s_python_function_imshow) {
       throw std::runtime_error("Couldn't find required function!");
     }
 
@@ -292,7 +295,9 @@ private:
         !PyFunction_Check(s_python_function_text) ||
         !PyFunction_Check(s_python_function_suptitle) ||
         !PyFunction_Check(s_python_function_bar) ||
-        !PyFunction_Check(s_python_function_subplots_adjust)) {
+        !PyFunction_Check(s_python_function_subplots_adjust) ||
+        !PyFunction_Check(s_python_function_imshow)
+      ) {
       throw std::runtime_error(
           "Python object is unexpectedly not a PyFunction.");
     }
@@ -302,24 +307,6 @@ private:
 
   ~_interpreter() { Py_Finalize(); }
 };
-
-void process_keywords(PyObject *kwargs,
-                      const std::map<std::string, std::string> &keywords) {
-  for (auto const &item : keywords) {
-    // check if the keyword is a number
-    try {
-      std::stringstream ss(item.second);
-      double d;
-      ss >> d;
-      PyDict_SetItemString(kwargs, item.first.c_str(), PyFloat_FromDouble(d));
-    }
-    // if its not, then leave it as string
-    catch (std::exception& e) {
-      PyDict_SetItemString(kwargs, item.first.c_str(),
-                           PyString_FromString(item.second.c_str()));
-                         }
-  }
-}
 
 } // end namespace detail
 
@@ -674,6 +661,29 @@ bool semilogy(const VectorY &y,
     x.at(i) = i;
 
   return semilogy(x, y, "", keywords);
+}
+
+template <typename Matrix>
+void imshow(const Matrix& X, const std::map<std::string, std::string> &keywords = {}) {
+  PyObject *Xarray = get_2darray(X);
+
+  PyObject *kwargs = PyDict_New();
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyUnicode_FromString(it->second.c_str()));
+  }
+
+  PyObject *plot_args = PyTuple_New(1);
+  PyTuple_SetItem(plot_args, 0, Xarray);
+
+  PyObject *res = PyObject_Call(
+      detail::_interpreter::get().s_python_function_imshow, plot_args, kwargs);
+
+  Py_DECREF(plot_args);
+  Py_DECREF(kwargs);
+  if (res)
+    Py_DECREF(res);
 }
 
 // @brief plot_surface for datapoints (x_ij, y_ij, z_ij) with i,j = 0..n
@@ -1389,7 +1399,11 @@ inline void legend(const std::string &loc = "best",
   }
 
   // add other keywords
-  detail::process_keywords(kwargs, keywords);
+  for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
+                         PyString_FromString(it->second.c_str()));
+  }
 
   PyObject *res =
       PyObject_Call(detail::_interpreter::get().s_python_function_legend,
