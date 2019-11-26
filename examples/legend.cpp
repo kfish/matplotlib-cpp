@@ -26,18 +26,19 @@ void bbox() {
   plt::show();
 }
 
-void keywords() {
-  plt::figure();
-  plt::plot({1, 2, 3}, {{"label", "a line"}});
-  plt::plot({1, 3, 5}, {{"label", "also a line"}});
-  plt::legend("best", {{"borderpad", "0.2"}});
-  plt::show();
-}
+// currently not working: only strings can be provided in the keyword arguments
+// void keywords() {
+//  plt::figure();
+//  plt::plot({1, 2, 3}, {{"label", "a line"}});
+//  plt::plot({1, 3, 5}, {{"label", "also a line"}});
+//  plt::legend("best", {{"borderpad", "0.2"}});
+//  plt::show();
+// }
 
 int main() {
   basic();
   loc();
   bbox();
-  keywords();
+  // keywords();
   return 0;
 }
