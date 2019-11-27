@@ -12,7 +12,8 @@ void waves(const unsigned n) {
     }
   }
   plt::figure();
-  plt::imshow(X);
+  plt::imshow(X, {{"cmap", "Spectral"}});
+  plt::colorbar();
   plt::show();
 }
 

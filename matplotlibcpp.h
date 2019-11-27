@@ -94,6 +94,7 @@ struct _interpreter {
   PyObject *s_python_function_bar;
   PyObject *s_python_function_subplots_adjust;
   PyObject *s_python_function_imshow;
+  PyObject *s_python_function_colorbar;
 
   /* For now, _interpreter is implemented as a singleton since its currently not
      possible to have multiple independent embedded python interpreters without
@@ -229,12 +230,13 @@ private:
     s_python_function_subplots_adjust =
         PyObject_GetAttrString(pymod, "subplots_adjust");
     s_python_function_imshow = PyObject_GetAttrString(pymod, "imshow");
+    s_python_function_colorbar = PyObject_GetAttrString(pymod, "colorbar");
 
     if (!s_python_function_show || !s_python_function_close ||
         !s_python_function_draw || !s_python_function_pause ||
         !s_python_function_figure || !s_python_function_fignum_exists ||
         !s_python_function_plot || !s_python_function_quiver ||
-        !s_python_function_contour ||
+        !s_python_function_contour || !s_python_function_colorbar ||
         !s_python_function_semilogx || !s_python_function_semilogy ||
         !s_python_function_loglog || !s_python_function_fill ||
         !s_python_function_fill_between || !s_python_function_subplot ||
@@ -296,7 +298,8 @@ private:
         !PyFunction_Check(s_python_function_suptitle) ||
         !PyFunction_Check(s_python_function_bar) ||
         !PyFunction_Check(s_python_function_subplots_adjust) ||
-        !PyFunction_Check(s_python_function_imshow)
+        !PyFunction_Check(s_python_function_imshow) ||
+        !PyFunction_Check(s_python_function_colorbar)
       ) {
       throw std::runtime_error(
           "Python object is unexpectedly not a PyFunction.");
@@ -684,6 +687,15 @@ void imshow(const Matrix& X, const std::map<std::string, std::string> &keywords 
   Py_DECREF(kwargs);
   if (res)
     Py_DECREF(res);
+}
+
+// @brief Add the colorbar
+void colorbar() {
+  PyObject *res =
+      PyObject_CallObject(detail::_interpreter::get().s_python_function_colorbar,
+                          detail::_interpreter::get().s_python_empty_tuple);
+  if (!res)
+    throw std::runtime_error("Call to colorbar() failed.");
 }
 
 // @brief plot_surface for datapoints (x_ij, y_ij, z_ij) with i,j = 0..n
