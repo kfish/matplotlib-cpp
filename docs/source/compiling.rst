@@ -44,7 +44,7 @@ In detail:
 
   - The Python header ``Python.h``
 
-    The Python header comes with the Python installation. It it cannot be
+    The Python header comes with the Python installation. If it cannot be
     found on your system try installing the Python development packages.
     The location of this header has to be specified using the option ``-I``.
 
