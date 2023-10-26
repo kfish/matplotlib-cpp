@@ -457,8 +457,8 @@ template <typename Matrix> PyObject *get_2darray(const Matrix &A) {
 
   double *vd_begin = static_cast<double *>(PyArray_DATA(varray));
 
-  for (std::size_t i = 0; i < A.rows(); ++i) {
-    for (std::size_t j = 0; j < A.cols(); ++j) {
+  for (ssize_t i = 0; i < A.rows(); ++i) {
+    for (ssize_t j = 0; j < A.cols(); ++j) {
       *(vd_begin + i * A.cols() + j) = A(i, j);
     }
   }
@@ -550,10 +550,10 @@ bool plot(const VectorY &y, const std::string &format = "",
   // Note: cannot be an unsigned type for some reason, yields an overflow
   // problem..
   std::vector<int> x(y.size());
-  for (int i = 0; i < x.size(); ++i)
+  for (size_t i = 0; i < x.size(); ++i)
     x.at(i) = i;
 
-  return plot(x, y, format);
+  return plot(x, y, format, keywords);
 }
 
 // @brief standard plot function if x data is not specified and the formatting
