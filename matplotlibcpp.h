@@ -550,7 +550,7 @@ bool plot(const VectorY &y, const std::string &format = "",
   // Note: cannot be an unsigned type for some reason, yields an overflow
   // problem..
   std::vector<int> x(y.size());
-  for (size_t i = 0; i < x.size(); ++i)
+  for (std::size_t i = 0; i < x.size(); ++i)
     x.at(i) = i;
 
   return plot(x, y, format, keywords);
@@ -562,7 +562,7 @@ template <typename VectorY = std::vector<double>>
 bool plot(const VectorY &y,
           const std::map<std::string, std::string> &keywords) {
   std::vector<int> x(y.size());
-  for (int i = 0; i < x.size(); ++i)
+  for (std::size_t i = 0; i < x.size(); ++i)
     x.at(i) = i;
 
   return plot(x, y, "", keywords);
@@ -1074,6 +1074,11 @@ bool bar(const std::vector<Numeric> &y, std::string ec = "black",
   PyDict_SetItemString(kwargs, "ec", PyString_FromString(ec.c_str()));
   PyDict_SetItemString(kwargs, "ls", PyString_FromString(ls.c_str()));
   PyDict_SetItemString(kwargs, "lw", PyFloat_FromDouble(lw));
+
+  for (auto const &item : keywords) {
+    PyDict_SetItemString(kwargs, item.first.c_str(),
+                         PyString_FromString(item.second.c_str()));
+  }
 
   PyObject *plot_args = PyTuple_New(2);
   PyTuple_SetItem(plot_args, 0, xarray);
